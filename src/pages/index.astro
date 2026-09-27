@@ -1,0 +1,176 @@
+---
+import "../styles/global.css";
+
+const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"];
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>zeikin.org — POP-UP Store</title>
+    <meta name="description" content="zeikin POP-UP Store — 2025年6月29日 中野セントラルパーク" />
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Fragment+Mono&family=Martian+Mono:wght@200&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="ticker" aria-hidden="true">
+      {
+        [0, 1, 2].map(() => (
+          <>
+            <span class="ticker__sun">☼</span>
+            <span class="ticker__content">
+              {tickerText.map((t) => (
+                <span>{t}</span>
+              ))}
+            </span>
+          </>
+        ))
+      }
+    </header>
+
+    <section class="intro">
+      <div class="intro__content">
+        <p class="intro__headline">
+          Frame &amp; Form specialize in crafting the visual language of your digital brand.
+        </p>
+      </div>
+    </section>
+
+    <section class="landing">
+      <div class="landing__headline-block">
+        <h1 class="landing__headline">Event<br />zeikin<br />POP-UP Store</h1>
+      </div>
+      <div class="landing__cta">
+        <div class="landing__cta-headline">
+          <p class="landing__cta-date">10AM-4PM<br />June 29, 2025<br />Nakano Central Park</p>
+          <p class="landing__cta-sub">MOTTAINAI Flea market</p>
+        </div>
+        <div class="landing__cta-action">
+          <a class="landing__map-link" href="https://maps.app.goo.gl/qzaq2KcP5BwNGdQ46" target="_blank" rel="noopener">
+            Google map
+            <img src="/images/arrow.svg" alt="" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="connect">
+      <p class="connect__label">Product LINE UP ↓</p>
+    </section>
+
+    <section class="grid">
+      <div class="grid__item grid__item--pink grid__item--padded">
+        <div class="grid__image">
+          <img src="/images/tshirt.png" alt="T-shirtの商品画像" />
+        </div>
+        <div class="grid__caption">
+          <span>T-Shirt</span>
+          <span>Taxhund</span>
+        </div>
+      </div>
+
+      <div class="grid__item">
+        <div class="grid__image grid__image--cover">
+          <img src="/images/poet-tshirt.png" alt="" />
+        </div>
+      </div>
+
+      <div class="grid__item">
+        <div class="grid__image grid__image--cover">
+          <img src="/images/photo10.png" alt="" />
+        </div>
+      </div>
+
+      <div class="grid__item">
+        <div class="grid__image grid__image--cover" style="background: linear-gradient(180deg, #cacaca 77%, #d5d4d6 88.5%);">
+          <img src="/images/bag1.png" alt="" />
+        </div>
+        <div class="grid__caption">
+          <span>T-Shirt</span>
+          <span>Taxhund</span>
+        </div>
+      </div>
+
+      <div class="grid__item grid__item--gray">
+        <p class="grid__sticker-label">Sticker</p>
+      </div>
+
+      <div class="grid__item">
+        <div class="grid__image grid__image--cover">
+          <img src="/images/poet.png" alt="詩人の写真" />
+        </div>
+      </div>
+
+      <div class="grid__item grid__item--dark">
+        <img class="grid__vector" src="/images/vector-line.svg" alt="" />
+      </div>
+
+      <div class="grid__item grid__item--cream">
+        <img class="grid__cassette" src="/images/taxhund-set.png" alt="カセットテープ" />
+      </div>
+
+      <div class="grid__item grid__item--gray">
+        <p class="grid__sticker-label">Sticker</p>
+      </div>
+
+      <div class="grid__item grid__item--gray grid__item--padded">
+        <div class="grid__emoji-set">
+          <img src="/images/sticker-2.png" alt="" />
+          <img src="/images/sticker-3.png" alt="" />
+          <img src="/images/sticker-4.png" alt="" />
+          <img src="/images/sticker-5.png" alt="" />
+        </div>
+        <div class="grid__caption">
+          <span>Sticker</span>
+          <span>Emoji set</span>
+        </div>
+      </div>
+
+      <a class="grid__item grid__item--black" href="#">
+        <p class="grid__text">Online Shop<br />(Comming soon)</p>
+      </a>
+
+      <a class="grid__item grid__item--black" href="#">
+        <p class="grid__text">By the Instagram</p>
+        <img class="grid__arrow" src="/images/arrow-up-right.svg" alt="" />
+      </a>
+    </section>
+
+    <div class="ticker ticker--wide" aria-hidden="true">
+      {
+        [0, 1, 2].map(() => (
+          <>
+            <span class="ticker__sun">☼</span>
+            <span class="ticker__content">
+              {tickerText.map((t) => (
+                <span>{t}</span>
+              ))}
+            </span>
+          </>
+        ))
+      }
+    </div>
+
+    <footer class="footer">
+      <div class="footer__social">
+        <h2 class="footer__heading">SOCIAL</h2>
+        <ul class="footer__links">
+          <li><a href="#">Instagram</a></li>
+          <li>TickTok</li>
+          <li>LINE Sticker</li>
+        </ul>
+      </div>
+      <img class="footer__logo" src="/images/footer-logo.svg" alt="zeikin.org" />
+    </footer>
+  </body>
+</html>
