@@ -1,7 +1,14 @@
 ---
 import "../styles/global.css";
 
-const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"];
+const tickerText = ["Paying taxes™ is the chief end;", "Labor merely enables its"];
+
+const links = {
+  instagram: "https://www.instagram.com/zeikinorg/",
+  tiktok: "https://www.tiktok.com/@zeikinorg",
+  lineSticker: "https://store.line.me/emojishop/product/685a3cbc5891fa264f2d1bc4/ja",
+  map: "https://maps.app.goo.gl/qzaq2KcP5BwNGdQ46",
+};
 ---
 
 <!doctype html>
@@ -23,33 +30,25 @@ const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"
     />
   </head>
   <body>
-    <header class="ticker" aria-hidden="true">
-      {
-        [0, 1, 2].map(() => (
-          <>
-            <span class="ticker__sun">☼</span>
-            <span class="ticker__content">
-              {tickerText.map((t) => (
-                <span>{t}</span>
-              ))}
-            </span>
-          </>
-        ))
-      }
-    </header>
+    <div class="page">
+      <header class="ticker" aria-hidden="true">
+        {
+          [0, 1, 2].map(() => (
+            <>
+              <span class="ticker__sun">☼</span>
+              <span class="ticker__content">
+                {tickerText.map((t) => (
+                  <span>{t}</span>
+                ))}
+              </span>
+            </>
+          ))
+        }
+      </header>
 
-    <section class="intro">
-      <div class="intro__content">
-        <p class="intro__headline">
-          Frame &amp; Form specialize in crafting the visual language of your digital brand.
-        </p>
-      </div>
-    </section>
-
-    <section class="landing">
-      <div class="landing__headline-block">
+      <section class="intro">
         <video
-          class="landing__video"
+          class="intro__video"
           autoplay
           muted
           loop
@@ -60,125 +59,142 @@ const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"
           <source src="/media/key-graphic.webm" type="video/webm" />
           <source src="/media/key-graphic.mp4" type="video/mp4" />
         </video>
-        <h1 class="landing__headline">Event<br /><br />zeikin<br />POP-UP Store</h1>
-      </div>
-      <div class="landing__cta">
-        <div class="landing__cta-headline">
-          <p class="landing__cta-date">10AM-4PM<br />June 29, 2025<br />Nakano Central Park</p>
-          <p class="landing__cta-sub">MOTTAINAI Flea market</p>
+        <div class="intro__content">
+          <p class="intro__headline">Tax time. Crunch. Munch. Numbers go brrrrrrrrrrrrrrrrrrr</p>
         </div>
-        <div class="landing__cta-action">
-          <a class="landing__map-link" href="https://maps.app.goo.gl/qzaq2KcP5BwNGdQ46" target="_blank" rel="noopener">
-            Google map
-            <img src="/images/arrow.svg" alt="" />
-          </a>
+      </section>
+
+      <section class="landing">
+        <div class="landing__headline-block">
+          <h1 class="landing__headline">Event<br /><br />zeikin<br />POP-UP Store</h1>
         </div>
-      </div>
-    </section>
-
-    <section class="connect">
-      <p class="connect__label">Product LINE UP ↓</p>
-    </section>
-
-    <section class="grid">
-      <div class="grid__item grid__item--bordered grid__item--pink">
-        <img class="grid__product-image" src="/images/tshirt.png" alt="T-shirt" />
-        <div class="grid__caption">
-          <span>T-Shirt</span>
-          <span>Taxhund</span>
+        <div class="landing__cta">
+          <div class="landing__cta-headline">
+            <p class="landing__cta-date">10AM-4PM<br />June 29, 2025<br />Nakano Central Park</p>
+            <p class="landing__cta-sub">MOTTAINAI Flea market</p>
+          </div>
+          <div class="landing__cta-action">
+            <a class="landing__map-link" href={links.map} target="_blank" rel="noopener">
+              Google map
+              <img src="/images/arrow.svg" alt="" />
+            </a>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div class="grid__item">
-        <div class="grid__crop grid__crop--tee">
-          <img src="/images/poet-tshirt.png" alt="" />
+      <section class="connect">
+        <p class="connect__label">Product LINE UP ↓</p>
+      </section>
+
+      <section class="grid">
+        <div class="grid__item grid__item--charcoal" style="--order: 0">
+          <p class="grid__label">Clothes</p>
         </div>
-      </div>
 
-      <div class="grid__item">
-        <img class="grid__cover" src="/images/photo10.png" alt="" />
-      </div>
-
-      <div class="grid__item">
-        <div class="grid__crop grid__crop--bag">
-          <img src="/images/bag1.png" alt="Tote bag" />
+        <div class="grid__item grid__item--pink" style="--order: 2">
+          <img class="grid__tee" src="/images/tshirt-final.png" alt="T-shirt" />
+          <div class="grid__caption">
+            <span>T-Shirt</span>
+            <span>Taxhund</span>
+          </div>
         </div>
-        <div class="grid__caption grid__caption--dark grid__caption--overlay">
-          <span>T-Shirt</span>
-          <span>Taxhund</span>
+
+        <div class="grid__item" style="--order: 4">
+          <div class="grid__crop grid__crop--gray">
+            <img class="grid__cover" src="/images/photo10.png" alt="" />
+          </div>
         </div>
-      </div>
 
-      <div class="grid__item grid__item--bordered grid__item--gray grid__item--center">
-        <p class="grid__label">Sticker</p>
-      </div>
-
-      <div class="grid__item grid__item--bordered">
-        <img class="grid__cover" src="/images/poet.png" alt="" />
-      </div>
-
-      <div class="grid__item grid__item--bordered grid__item--dark grid__item--center">
-        <img class="grid__vector" src="/images/vector-line.svg" alt="" />
-      </div>
-
-      <div class="grid__item grid__item--bordered grid__item--cream">
-        <div class="grid__crop grid__crop--stickers">
-          <img src="/images/taxhund-set.png" alt="Sticker set" />
+        <div class="grid__item" style="--order: 6">
+          <div class="grid__crop grid__crop--gray grid__crop--tee">
+            <img src="/images/poet-tshirt.png" alt="" />
+          </div>
         </div>
-      </div>
 
-      <div class="grid__item grid__item--bordered grid__item--gray grid__item--center">
-        <p class="grid__label">Sticker</p>
-      </div>
-
-      <div class="grid__item grid__item--bordered grid__item--gray grid__emoji-cell">
-        <div class="grid__emoji-set">
-          <img src="/images/sticker-2.png" alt="" />
-          <img src="/images/sticker-3.png" alt="" />
-          <img src="/images/sticker-4.png" alt="" />
-          <img src="/images/sticker-5.png" alt="" />
+        <div class="grid__item grid__item--swap" style="--order: 8">
+          <div class="grid__crop grid__crop--bag">
+            <img src="/images/bag1.png" alt="Tote bag" />
+          </div>
         </div>
-        <div class="grid__caption grid__caption--dark">
-          <span>Sticker</span>
-          <span>Emoji set</span>
+
+        <div class="grid__item grid__item--charcoal" style="--order: 10">
+          <p class="grid__label">Sticker</p>
         </div>
+
+        <div class="grid__item grid__item--cyan" style="--order: 12">
+          <img class="grid__ze" src="/images/sticker-5.png" alt="" />
+          <div class="grid__caption">
+            <span>Sticker Set</span>
+            <span>TaxMoji</span>
+          </div>
+        </div>
+
+        <div class="grid__item" style="--order: 14">
+          <img class="grid__cover" src="/images/stickers-drawing.png" alt="" />
+        </div>
+
+        <div class="grid__item" style="--order: 16">
+          <img class="grid__cover" src="/images/poet.png" alt="" />
+        </div>
+
+        <div class="grid__item grid__item--gray-dark" style="--order: 18">
+          <img class="grid__vector" src="/images/vector-line.svg" alt="" />
+        </div>
+
+        <div class="grid__item grid__item--green" style="--order: 20">
+          <p class="grid__label">LINE Emoji</p>
+        </div>
+
+        <div class="grid__item" style="--order: 22">
+          <img class="grid__cover" src="/images/tax-cat.png" alt="" />
+        </div>
+
+        <div class="grid__item grid__item--link" style="--order: 24">
+          <p class="grid__link-text">Online Shop<br />(Comming soon)</p>
+        </div>
+
+        <a
+          class="grid__item grid__item--link grid__item--link-arrow"
+          style="--order: 26"
+          href={links.instagram}
+          target="_blank"
+          rel="noopener"
+        >
+          <p class="grid__link-text">Instagram</p>
+          <img class="grid__arrow" src="/images/arrow-up-right.svg" alt="" />
+        </a>
+
+        <div class="grid__item" style="--order: 28">
+          <img class="grid__cover" src="/images/hands-stickers.jpg" alt="" />
+        </div>
+      </section>
+
+      <div class="ticker ticker--wide" aria-hidden="true">
+        {
+          [0, 1, 2].map(() => (
+            <>
+              <span class="ticker__sun">☼</span>
+              <span class="ticker__content">
+                {tickerText.map((t) => (
+                  <span>{t}</span>
+                ))}
+              </span>
+            </>
+          ))
+        }
       </div>
 
-      <a class="grid__item grid__item--bordered grid__item--link" href="#">
-        <p class="grid__link-text">Online Shop<br />(Comming soon)</p>
-      </a>
-
-      <a class="grid__item grid__item--bordered grid__item--link" href="#">
-        <p class="grid__link-text">By the Instagram</p>
-        <img class="grid__arrow" src="/images/arrow-up-right.svg" alt="" />
-      </a>
-    </section>
-
-    <div class="ticker ticker--wide" aria-hidden="true">
-      {
-        [0, 1, 2].map(() => (
-          <>
-            <span class="ticker__sun">☼</span>
-            <span class="ticker__content">
-              {tickerText.map((t) => (
-                <span>{t}</span>
-              ))}
-            </span>
-          </>
-        ))
-      }
+      <footer class="footer">
+        <div class="footer__social">
+          <h2 class="footer__heading">Contact us</h2>
+          <ul class="footer__links">
+            <li><a href={links.instagram} target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href={links.tiktok} target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href={links.lineSticker} target="_blank" rel="noopener">LINE Sticker</a></li>
+          </ul>
+        </div>
+        <img class="footer__logo" src="/images/footer-logo.svg" alt="zeikin.org" />
+      </footer>
     </div>
-
-    <footer class="footer">
-      <div class="footer__social">
-        <h2 class="footer__heading">SOCIAL</h2>
-        <ul class="footer__links">
-          <li><a href="#">Instagram</a></li>
-          <li>TickTok</li>
-          <li>LINE Sticker</li>
-        </ul>
-      </div>
-      <img class="footer__logo" src="/images/footer-logo.svg" alt="zeikin.org" />
-    </footer>
   </body>
 </html>

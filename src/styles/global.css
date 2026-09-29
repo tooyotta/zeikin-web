@@ -3,16 +3,16 @@
   --fg: #ffffff;
   --lime: #d9fc53;
   --pink: #d02159;
-  --gray-light: #e9e9e9;
+  --cyan: #16d4ff;
+  --green: #69ff28;
+  --charcoal: #333333;
   --gray-dark: #555555;
-  --cream: #f4f6f5;
+  --gray-light: #e9e9e9;
 
   --font-pixel: "DotGothic16", sans-serif;
   --font-mono: "Fragment Mono", monospace;
   --font-sun: "VT323", monospace;
   --font-headline-mobile: "Martian Mono", monospace;
-
-  --line: 1px solid var(--fg);
 }
 
 * {
@@ -23,7 +23,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg);
+  background: var(--fg);
   color: var(--fg);
   font-family: var(--font-pixel);
   font-weight: 400;
@@ -45,6 +45,17 @@ a {
   color: inherit;
 }
 
+/* Sections sit on a white page with 1px gaps, which draws the white divider lines */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.page > * {
+  background: var(--bg);
+}
+
 /* ---------- Status bar (ticker) ---------- */
 
 .ticker {
@@ -53,16 +64,12 @@ a {
   align-items: center;
   justify-content: center;
   gap: 50px;
-  max-width: 1500px;
-  margin: 0 auto;
   padding: 10px 50px 10px 0;
   overflow: hidden;
-  border-bottom: var(--line);
   white-space: nowrap;
 }
 
 .ticker--wide {
-  border-top: var(--line);
   padding-block: 50px;
 }
 
@@ -82,15 +89,27 @@ a {
   letter-spacing: 0.16px;
 }
 
-/* ---------- Intro ---------- */
+/* ---------- Intro (key graphic) ---------- */
 
 .intro {
+  position: relative;
   padding-top: 80px;
+  overflow: hidden;
+}
+
+.intro__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
 }
 
 .intro__content {
+  position: relative;
   padding: 10px 16px 150px;
-  border-bottom: var(--line);
+  border-bottom: 1px solid var(--fg);
 }
 
 .intro__headline {
@@ -100,7 +119,7 @@ a {
   letter-spacing: 0.64px;
 }
 
-/* ---------- Landing (key graphic + event CTA) ---------- */
+/* ---------- Landing (event CTA) ---------- */
 
 .landing {
   display: flex;
@@ -108,24 +127,12 @@ a {
 }
 
 .landing__headline-block {
-  position: relative;
   flex: 1 0 0;
   min-width: 0;
   padding: 40px;
-  overflow: hidden;
-}
-
-.landing__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.6;
 }
 
 .landing__headline {
-  position: relative;
   font-size: 32px;
   line-height: 1.3;
   letter-spacing: 0.32px;
@@ -134,8 +141,8 @@ a {
 
 .landing__cta {
   flex-shrink: 0;
-  width: 426px;
-  height: 426px;
+  width: min(426px, 50%);
+  aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -193,11 +200,7 @@ a {
 /* ---------- Product LINE UP label ---------- */
 
 .connect {
-  max-width: 1920px;
-  margin: 0 auto;
   padding: 34px 16px;
-  border-top: var(--line);
-  border-bottom: var(--line);
 }
 
 .connect__label {
@@ -209,68 +212,74 @@ a {
 
 /* ---------- Product grid ---------- */
 
-/* A 360px basis reflows 3 → 2 → 1 columns like the Figma breakpoints; equal basis keeps padded and unpadded cells the same width */
+/* 380px basis + 1px gaps reflows 5 → 3 → 2 → 1 columns at the Figma frame widths (2247 / 1280 / 800 / 375) */
 .grid {
+  container-type: inline-size;
   display: flex;
   flex-wrap: wrap;
-  max-width: 1500px;
-  margin: 0 auto;
-  padding-bottom: 80px;
+  gap: 1px;
+  background: var(--fg);
 }
 
+/* Row height = one column's width, so a stretched last-row cell keeps the row height instead of growing tall */
 .grid__item {
+  --cols: 1;
   position: relative;
-  flex: 1 0 360px;
-  height: 400px;
+  flex: 1 0 min(380px, 100%);
+  height: calc((100cqw - (var(--cols) - 1) * 1px) / var(--cols));
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  order: var(--order);
+  background: var(--bg);
+  color: var(--fg);
   text-decoration: none;
 }
 
-.grid__item--bordered {
-  border: var(--line);
-}
-
-.grid__item--center {
-  align-items: center;
-  justify-content: center;
-  padding: 21px 13px;
+.grid__item--charcoal {
+  background: var(--charcoal);
 }
 
 .grid__item--pink {
   background: var(--pink);
-  align-items: center;
+  gap: 32px;
+  padding: 48px 13px 21px;
+}
+
+.grid__item--cyan {
+  background: var(--cyan);
   justify-content: space-between;
+  padding: 120px 13px 21px;
+}
+
+.grid__item--green {
+  background: var(--green);
+  color: var(--bg);
+}
+
+.grid__item--gray-dark {
+  background: var(--gray-dark);
   padding: 21px 13px;
 }
 
-.grid__item--gray {
-  background: var(--gray-light);
-}
-
-.grid__item--dark {
-  background: var(--gray-dark);
-}
-
-.grid__item--cream {
-  background: var(--cream);
-  align-items: center;
-  justify-content: center;
-}
-
 .grid__item--link {
-  background: var(--bg);
   align-items: flex-start;
   justify-content: space-between;
   padding: 21px 13px;
 }
 
-.grid__product-image {
-  flex: 1 0 0;
-  min-height: 0;
-  width: 100%;
-  object-fit: contain;
+.grid__item--link-arrow {
+  padding-bottom: 13px;
+}
+
+.grid__label {
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .grid__cover {
@@ -281,10 +290,17 @@ a {
   object-fit: cover;
 }
 
+.grid__tee {
+  flex: 1 0 0;
+  min-height: 0;
+  aspect-ratio: 1003 / 977;
+  object-fit: cover;
+}
+
 /* Crop windows reproduce the Figma image fills (percentages copied from the design) */
 .grid__crop {
-  position: relative;
-  flex-shrink: 0;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
 }
 
@@ -293,9 +309,8 @@ a {
   max-width: none;
 }
 
-.grid__crop--tee {
-  width: max(100%, 426.667px);
-  height: 400px;
+.grid__crop--gray {
+  background: var(--gray-light);
 }
 
 .grid__crop--tee img {
@@ -306,9 +321,7 @@ a {
 }
 
 .grid__crop--bag {
-  position: absolute;
-  inset: -138.94px -49.13px 0 -30.37px;
-  background: linear-gradient(180.76deg, #cacaca 77%, #d5d4d6 88.455%);
+  background: linear-gradient(180.67deg, #cacaca 77%, #d5d4d6 88.455%);
 }
 
 .grid__crop--bag img {
@@ -318,16 +331,16 @@ a {
   height: 121.53%;
 }
 
-.grid__crop--stickers {
-  width: 815.038px;
-  height: 584.684px;
+.grid__ze {
+  width: 134.942px;
+  height: 131px;
+  object-fit: cover;
 }
 
-.grid__crop--stickers img {
-  top: -39.4%;
-  left: 0;
-  width: 100%;
-  height: 139.4%;
+.grid__vector {
+  width: auto;
+  height: 100%;
+  max-height: 330.896px;
 }
 
 .grid__caption {
@@ -335,6 +348,7 @@ a {
   gap: 20px;
   align-items: center;
   justify-content: center;
+  width: 100%;
   padding: 16px 0;
   font-family: var(--font-mono);
   font-size: 14px;
@@ -347,52 +361,6 @@ a {
   opacity: 0.6;
 }
 
-.grid__caption--dark {
-  color: var(--bg);
-}
-
-.grid__caption--overlay {
-  position: absolute;
-  top: 330px;
-  left: 0;
-  width: 100%;
-}
-
-.grid__label {
-  font-size: 24px;
-  line-height: 1.3;
-  letter-spacing: 0.24px;
-  color: var(--bg);
-  text-align: center;
-}
-
-.grid__vector {
-  width: 200px;
-  height: auto;
-}
-
-.grid__emoji-set {
-  flex: 1 0 0;
-  min-height: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  width: 227px;
-}
-
-.grid__emoji-set img {
-  width: 100px;
-  height: auto;
-}
-
-.grid__emoji-cell {
-  padding: 20px;
-  align-items: center;
-}
-
 .grid__link-text {
   font-family: var(--font-mono);
   font-size: 14px;
@@ -403,6 +371,46 @@ a {
 .grid__arrow {
   width: 48px;
   height: 48px;
+}
+
+/* Column thresholds follow from the 380px basis + 1px gap: n columns fit from n*381-1 px */
+@container (min-width: 761px) {
+  .grid__item {
+    --cols: 2;
+  }
+}
+
+/* Figma's 3-column frame uses fixed 400px rows */
+@container (min-width: 1142px) {
+  .grid__item {
+    height: 400px;
+  }
+}
+
+@container (min-width: 1523px) {
+  .grid__item {
+    --cols: 4;
+    height: calc((100cqw - (var(--cols) - 1) * 1px) / var(--cols));
+  }
+}
+
+@container (min-width: 1904px) {
+  .grid__item {
+    --cols: 5;
+  }
+}
+
+@container (min-width: 2285px) {
+  .grid__item {
+    --cols: 6;
+  }
+}
+
+/* Below three columns the design swaps the Sticker and tote bag cells */
+@container (max-width: 1141px) {
+  .grid__item--swap {
+    order: calc(var(--order) + 3);
+  }
 }
 
 /* ---------- Footer ---------- */
@@ -429,6 +437,7 @@ a {
 .footer__links {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
   margin: 0;
   padding: 0;
@@ -455,8 +464,8 @@ a {
 
 @media (max-width: 640px) {
   .intro__headline {
-    font-size: 48px;
-    letter-spacing: 0.48px;
+    font-size: 58px;
+    letter-spacing: 0.58px;
   }
 
   .landing {
@@ -465,7 +474,7 @@ a {
 
   .landing__headline-block {
     flex: none;
-    height: 375px;
+    aspect-ratio: 1 / 1;
   }
 
   .landing__headline {
@@ -478,17 +487,103 @@ a {
 
   .landing__cta {
     width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
+  }
+
+  .landing__cta-action {
+    padding-inline: 16px;
+  }
+}
+
+/* ---------- Narrow (Figma 248 frame) ---------- */
+
+@media (max-width: 300px) {
+  .ticker--wide {
+    padding-block: 20px;
+  }
+
+  .intro__headline {
+    font-size: 40px;
+    letter-spacing: 0.4px;
+  }
+
+  .landing__headline-block {
+    padding: 16px;
+  }
+
+  .landing__headline {
+    font-family: var(--font-pixel);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: 0.18px;
+  }
+
+  .landing__cta {
+    padding: 16px 0 0 16px;
+  }
+
+  .landing__cta-headline {
+    gap: 20px;
+    padding: 0;
+  }
+
+  .landing__cta-date {
+    font-size: 18px;
+    letter-spacing: 0.18px;
+  }
+
+  .landing__cta-sub {
+    font-size: 14px;
+    letter-spacing: 0.14px;
+  }
+
+  .landing__cta-action {
+    padding: 0;
+  }
+
+  .landing__map-link {
+    font-size: 14px;
+    letter-spacing: 0.14px;
+  }
+
+  .connect__label {
+    font-size: 14px;
+    letter-spacing: 0.14px;
+  }
+
+  .grid__label {
+    font-size: 18px;
+    letter-spacing: 0.18px;
+  }
+
+  .grid__item--cyan {
+    justify-content: center;
+    gap: 20px;
+    padding-top: 48px;
+  }
+
+  .grid__ze {
+    width: 112px;
+    height: 109px;
+  }
+
+  .footer__heading {
+    font-size: 24px;
+    letter-spacing: -0.72px;
+  }
+
+  .footer__links {
+    font-size: 18px;
+    letter-spacing: -0.54px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing__video {
+  .intro__video {
     display: none;
   }
 
-  .landing__headline-block {
+  .intro {
     background:
       linear-gradient(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.4)),
       url("/media/key-graphic-poster.jpg") center / cover no-repeat;
