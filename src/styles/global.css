@@ -58,19 +58,35 @@ a {
 
 /* ---------- Status bar (ticker) ---------- */
 
+/* Marquee values mirror the published Figma Site: two copies slide -100% in 67.45s, linear, never pausing on hover */
 .ticker {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  gap: 50px;
-  padding: 10px 50px 10px 0;
   overflow: hidden;
+  padding-block: 10px;
   white-space: nowrap;
 }
 
 .ticker--wide {
   padding-block: 50px;
+}
+
+.ticker__track {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  padding-right: 50px;
+  animation: ticker-scroll 67.4446875s linear infinite;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .ticker__sun {
@@ -579,6 +595,10 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    animation: none;
+  }
+
   .intro__video {
     display: none;
   }

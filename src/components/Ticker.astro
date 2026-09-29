@@ -1,0 +1,28 @@
+---
+interface Props {
+  as?: "header" | "div";
+  wide?: boolean;
+}
+
+const { as: Tag = "div", wide = false } = Astro.props;
+const text = ["Paying taxes™ is the chief end;", "Labor merely enables its"];
+---
+
+<Tag class:list={["ticker", { "ticker--wide": wide }]} aria-hidden="true">
+  {
+    [0, 1].map(() => (
+      <div class="ticker__track">
+        {[0, 1, 2].map(() => (
+          <>
+            <span class="ticker__sun">☼</span>
+            <span class="ticker__content">
+              {text.map((t) => (
+                <span>{t}</span>
+              ))}
+            </span>
+          </>
+        ))}
+      </div>
+    ))
+  }
+</Tag>

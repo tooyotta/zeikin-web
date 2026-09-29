@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
-
-const tickerText = ["Paying taxes™ is the chief end;", "Labor merely enables its"];
+import Ticker from "../components/Ticker.astro";
 
 const links = {
   instagram: "https://www.instagram.com/zeikinorg/",
@@ -31,20 +30,7 @@ const links = {
   </head>
   <body>
     <div class="page">
-      <header class="ticker" aria-hidden="true">
-        {
-          [0, 1, 2].map(() => (
-            <>
-              <span class="ticker__sun">☼</span>
-              <span class="ticker__content">
-                {tickerText.map((t) => (
-                  <span>{t}</span>
-                ))}
-              </span>
-            </>
-          ))
-        }
-      </header>
+      <Ticker as="header" />
 
       <section class="intro">
         <video
@@ -169,20 +155,7 @@ const links = {
         </div>
       </section>
 
-      <div class="ticker ticker--wide" aria-hidden="true">
-        {
-          [0, 1, 2].map(() => (
-            <>
-              <span class="ticker__sun">☼</span>
-              <span class="ticker__content">
-                {tickerText.map((t) => (
-                  <span>{t}</span>
-                ))}
-              </span>
-            </>
-          ))
-        }
-      </div>
+      <Ticker wide />
 
       <footer class="footer">
         <div class="footer__social">
