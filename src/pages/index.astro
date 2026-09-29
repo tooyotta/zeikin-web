@@ -48,7 +48,19 @@ const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"
 
     <section class="landing">
       <div class="landing__headline-block">
-        <h1 class="landing__headline">Event<br />zeikin<br />POP-UP Store</h1>
+        <video
+          class="landing__video"
+          autoplay
+          muted
+          loop
+          playsinline
+          poster="/media/key-graphic-poster.jpg"
+          aria-hidden="true"
+        >
+          <source src="/media/key-graphic.webm" type="video/webm" />
+          <source src="/media/key-graphic.mp4" type="video/mp4" />
+        </video>
+        <h1 class="landing__headline">Event<br /><br />zeikin<br />POP-UP Store</h1>
       </div>
       <div class="landing__cta">
         <div class="landing__cta-headline">
@@ -69,10 +81,8 @@ const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"
     </section>
 
     <section class="grid">
-      <div class="grid__item grid__item--pink grid__item--padded">
-        <div class="grid__image">
-          <img src="/images/tshirt.png" alt="T-shirtの商品画像" />
-        </div>
+      <div class="grid__item grid__item--bordered grid__item--pink">
+        <img class="grid__product-image" src="/images/tshirt.png" alt="T-shirt" />
         <div class="grid__caption">
           <span>T-Shirt</span>
           <span>Taxhund</span>
@@ -80,68 +90,66 @@ const tickerText = ["Paying taxes™ is chief ends;", "Labor merely enables its"
       </div>
 
       <div class="grid__item">
-        <div class="grid__image grid__image--cover">
+        <div class="grid__crop grid__crop--tee">
           <img src="/images/poet-tshirt.png" alt="" />
         </div>
       </div>
 
       <div class="grid__item">
-        <div class="grid__image grid__image--cover">
-          <img src="/images/photo10.png" alt="" />
-        </div>
+        <img class="grid__cover" src="/images/photo10.png" alt="" />
       </div>
 
       <div class="grid__item">
-        <div class="grid__image grid__image--cover" style="background: linear-gradient(180deg, #cacaca 77%, #d5d4d6 88.5%);">
-          <img src="/images/bag1.png" alt="" />
+        <div class="grid__crop grid__crop--bag">
+          <img src="/images/bag1.png" alt="Tote bag" />
         </div>
-        <div class="grid__caption">
+        <div class="grid__caption grid__caption--dark grid__caption--overlay">
           <span>T-Shirt</span>
           <span>Taxhund</span>
         </div>
       </div>
 
-      <div class="grid__item grid__item--gray">
-        <p class="grid__sticker-label">Sticker</p>
+      <div class="grid__item grid__item--bordered grid__item--gray grid__item--center">
+        <p class="grid__label">Sticker</p>
       </div>
 
-      <div class="grid__item">
-        <div class="grid__image grid__image--cover">
-          <img src="/images/poet.png" alt="詩人の写真" />
-        </div>
+      <div class="grid__item grid__item--bordered">
+        <img class="grid__cover" src="/images/poet.png" alt="" />
       </div>
 
-      <div class="grid__item grid__item--dark">
+      <div class="grid__item grid__item--bordered grid__item--dark grid__item--center">
         <img class="grid__vector" src="/images/vector-line.svg" alt="" />
       </div>
 
-      <div class="grid__item grid__item--cream">
-        <img class="grid__cassette" src="/images/taxhund-set.png" alt="カセットテープ" />
+      <div class="grid__item grid__item--bordered grid__item--cream">
+        <div class="grid__crop grid__crop--stickers">
+          <img src="/images/taxhund-set.png" alt="Sticker set" />
+        </div>
       </div>
 
-      <div class="grid__item grid__item--gray">
-        <p class="grid__sticker-label">Sticker</p>
+      <div class="grid__item grid__item--bordered grid__item--gray grid__item--center">
+        <p class="grid__label">Sticker</p>
       </div>
 
-      <div class="grid__item grid__item--gray grid__item--padded">
+      <div class="grid__item grid__item--bordered grid__item--gray grid__emoji-cell">
         <div class="grid__emoji-set">
           <img src="/images/sticker-2.png" alt="" />
           <img src="/images/sticker-3.png" alt="" />
           <img src="/images/sticker-4.png" alt="" />
           <img src="/images/sticker-5.png" alt="" />
         </div>
-        <div class="grid__caption">
+        <div class="grid__caption grid__caption--dark">
           <span>Sticker</span>
           <span>Emoji set</span>
         </div>
       </div>
 
-      <a class="grid__item grid__item--black" href="#">
-        <p class="grid__text">Online Shop<br />(Comming soon)</p>
+      <a class="grid__item grid__item--bordered grid__item--link" href="#">
+        <p class="grid__link-text">Online Shop<br />(Comming soon)</p>
       </a>
 
-      <a class="grid__item grid__item--black" href="#">
-        <p class="grid__text">By the Instagram</p>
+      <a class="grid__item grid__item--bordered grid__item--link" href="#">
+        <p class="grid__link-text">By the Instagram</p>
         <img class="grid__arrow" src="/images/arrow-up-right.svg" alt="" />
       </a>
     </section>
