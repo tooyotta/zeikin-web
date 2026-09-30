@@ -74,7 +74,7 @@ html = f'''<!doctype html>
       :root {{
         --bg: #000000;
         --fg: #ffffff;
-        --lime: #d9fc53;
+        --orange: #ef472f;
         --gray: #555555;
         --font-pixel: "DotGothic16", sans-serif;
         --font-mono: "Fragment Mono", monospace;
@@ -123,12 +123,12 @@ html = f'''<!doctype html>
         font-size: 15px;
         text-decoration: none;
         padding: 10px 16px;
-        border: 1px solid var(--lime);
-        color: var(--lime);
+        border: 1px solid var(--orange);
+        color: var(--orange);
       }}
 
       .actions a:hover {{
-        background: var(--lime);
+        background: var(--orange);
         color: var(--bg);
       }}
 
@@ -163,7 +163,7 @@ html = f'''<!doctype html>
 
       <nav class="actions">
         <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" target="_blank" rel="noopener">PDF を開く</a>
-        <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" download="zeikin-entry.pdf">ダウンロード</a>
+        <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" download="zeikin-entry.pdf">PDF をダウンロード</a>
       </nav>
 
       <main class="pages">
