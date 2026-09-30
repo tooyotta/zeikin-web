@@ -34,18 +34,15 @@
       body {
         margin: 0;
         padding: 0;
-        min-height: 100%;
         background: var(--bg);
         color: var(--fg);
         font-family: var(--font-pixel);
       }
 
       .page {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        padding: 24px;
-        gap: 20px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 24px 64px;
       }
 
       .head {
@@ -53,6 +50,7 @@
         flex-wrap: wrap;
         align-items: baseline;
         gap: 8px 16px;
+        margin-bottom: 16px;
       }
 
       .head__home {
@@ -79,6 +77,11 @@
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        padding: 12px 0;
+        background: linear-gradient(var(--bg) 70%, rgba(0, 0, 0, 0));
       }
 
       .actions a {
@@ -95,32 +98,34 @@
         color: var(--bg);
       }
 
-      .viewer {
-        flex: 1;
-        min-height: 70vh;
-        border: 1px solid var(--gray);
-        background: #111;
+      .pages {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        margin-top: 12px;
       }
 
-      .viewer object,
-      .viewer iframe {
+      .page-card {
+        margin: 0;
+      }
+
+      .page-card img {
         display: block;
         width: 100%;
-        height: 100%;
-        border: 0;
+        height: auto;
+        background: #111;
+        border: 1px solid var(--gray);
       }
 
-      .fallback {
-        padding: 24px;
-        font-size: 14px;
-        line-height: 1.8;
-      }
-
-      .fallback a {
-        color: var(--lime);
+      .page-card figcaption {
+        margin-top: 6px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--gray);
       }
 
       .foot {
+        margin-top: 40px;
         font-family: var(--font-mono);
         font-size: 11px;
         color: var(--gray);
@@ -128,10 +133,10 @@
 
       @media (max-width: 600px) {
         .page {
-          padding: 16px;
+          padding: 16px 16px 48px;
         }
-        .viewer {
-          min-height: 60vh;
+        .pages {
+          gap: 18px;
         }
       }
     </style>
@@ -141,21 +146,155 @@
       <header class="head">
         <a class="head__home" href="/">zeikin.org</a>
         <h1 class="head__title">CREATIVE HACK AWARD</h1>
-        <span class="head__meta">entry document / 14 pages / PDF</span>
+        <span class="head__meta">entry document / 14 pages</span>
       </header>
 
       <nav class="actions">
-        <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf">PDF を開く</a>
-        <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" download>ダウンロード</a>
+        <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" target="_blank" rel="noopener">PDF を開く</a>
+        <a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" download="zeikin-entry.pdf">ダウンロード (7.8MB)</a>
       </nav>
 
-      <main class="viewer">
-        <object data="/CREATIVE-HACK-AWARD/zeikin-entry.pdf" type="application/pdf">
-          <div class="fallback">
-            <p>このブラウザは PDF のインライン表示に対応していません。</p>
-            <p><a href="/CREATIVE-HACK-AWARD/zeikin-entry.pdf">zeikin-entry.pdf を開く</a></p>
-          </div>
-        </object>
+      <main class="pages">
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p01.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 1 ページ目"
+            fetchpriority="high"
+          />
+          <figcaption>1 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p02.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 2 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>2 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p03.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 3 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>3 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p04.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 4 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>4 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p05.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 5 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>5 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p06.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 6 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>6 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p07.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 7 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>7 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p08.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 8 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>8 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p09.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 9 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>9 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p10.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 10 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>10 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p11.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 11 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>11 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p12.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 12 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>12 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p13.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 13 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>13 / 14</figcaption>
+        </figure>
+        <figure class="page-card">
+          <img
+            src="/CREATIVE-HACK-AWARD/pages/p14.jpg"
+            width="1400"
+            height="990"
+            alt="応募資料 14 ページ目"
+            loading="lazy" decoding="async"
+          />
+          <figcaption>14 / 14</figcaption>
+        </figure>
       </main>
 
       <footer class="foot">zeikin.org — 応募資料（作成中の版）</footer>
