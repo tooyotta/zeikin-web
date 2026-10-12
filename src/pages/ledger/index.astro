@@ -1,0 +1,79 @@
+---
+import Ledger from "../../layouts/Ledger.astro";
+import { entries, TYPE_LABELS, STAGES, NUMBER_LABELS, fileNo } from "../../lib/ledger";
+
+// 見出しの集計に出すのは活動量を表す数字だけ（ページ数などは個別の証明書に出す）
+const HEADLINE_NUMBERS = ["sold", "distributed", "visitors"];
+
+const latest = [...entries].reverse();
+const types = [...new Set(entries.map((e) => e.type))];
+const stageCounts = STAGES.map((s) => [s, entries.filter((e) => e.stage === s).length] as const);
+const totals: Record<string, number> = {};
+for (const e of entries)
+  for (const [k, v] of Object.entries(e.numbers ?? {})) if (HEADLINE_NUMBERS.includes(k)) totals[k] = (totals[k] ?? 0) + v;
+---
+
+<Ledger title="税金台帳 — zeikin.org" description="税金の活動を、すべて申告として番号で記録する台帳。">
+  <section class="ledger-head">
+    <p class="ledger-head__form">様式 ZK-L　税金台帳</p>
+    <h1 class="ledger-head__title">税金台帳</h1>
+    <p class="ledger-head__lead">
+      税金の活動は、すべて申告として番号で記録される。<br />
+      開発も、出店も、配布も、思いつきも、同じ台帳に積む。
+    </p>
+  </section>
+
+  <section class="ledger-stats" aria-label="集計">
+    <div class="ledger-stat ledger-stat--main">
+      <span class="ledger-stat__value">{entries.length}</span>
+      <span class="ledger-stat__label">申告</span>
+    </div>
+    {stageCounts.map(([s, n]) => (
+      <div class="ledger-stat">
+        <span class="ledger-stat__value">{n}</span>
+        <span class="ledger-stat__label">{s}</span>
+      </div>
+    ))}
+    {Object.entries(totals).map(([k, v]) => (
+      <div class="ledger-stat">
+        <span class="ledger-stat__value">{v}</span>
+        <span class="ledger-stat__label">{NUMBER_LABELS[k] ?? k}</span>
+      </div>
+    ))}
+  </section>
+
+  <section class="ledger-filter" aria-label="種別で絞り込む">
+    <button type="button" class="ledger-chip is-active" data-type="all">すべて</button>
+    {types.map((t) => (
+      <button type="button" class="ledger-chip" data-type={t}>{TYPE_LABELS[t] ?? t}</button>
+    ))}
+  </section>
+
+  <section class="ledger-list">
+    <ol>
+      {latest.map((e) => (
+        <li class="ledger-row" data-type={e.type}>
+          <a href={`/ledger/${String(e.no).padStart(3, "0")}/`}>
+            <span class="ledger-row__no">{fileNo(e.no)}</span>
+            <span class="ledger-row__date">{e.date ?? "日付不詳"}</span>
+            <span class="ledger-row__type">{TYPE_LABELS[e.type] ?? e.type}</span>
+            <span class="ledger-row__title">{e.title}</span>
+            <span class="ledger-row__stage">{e.stage}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</Ledger>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>(".ledger-chip");
+  const rows = document.querySelectorAll<HTMLElement>(".ledger-row");
+  chips.forEach((chip) =>
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => c.classList.toggle("is-active", c === chip));
+      const t = chip.dataset.type;
+      rows.forEach((r) => (r.hidden = t !== "all" && r.dataset.type !== t));
+    }),
+  );
+</script>

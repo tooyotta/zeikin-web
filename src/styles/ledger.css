@@ -1,0 +1,317 @@
+/* ---------- 税金台帳（/ledger） ---------- */
+
+.ledger-head {
+  padding: 64px 24px 48px;
+}
+
+.ledger-head__form {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lime);
+  letter-spacing: 0.08em;
+}
+
+.ledger-head__title {
+  margin-top: 16px;
+  font-size: clamp(48px, 10vw, 120px);
+  line-height: 1;
+}
+
+.ledger-head__lead {
+  margin-top: 24px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--gray-light);
+}
+
+/* 集計 */
+.ledger-stats {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ledger-stat {
+  flex: 1 1 110px;
+  border-right: 1px solid var(--charcoal);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 16px;
+  background: var(--bg);
+}
+
+.ledger-stat__value {
+  font-family: var(--font-sun);
+  font-size: 48px;
+  line-height: 1;
+}
+
+.ledger-stat__label {
+  font-size: 12px;
+  color: var(--gray-light);
+}
+
+.ledger-stat--main .ledger-stat__value {
+  color: var(--lime);
+}
+
+/* 絞り込み */
+.ledger-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px 24px;
+}
+
+.ledger-chip {
+  padding: 6px 12px;
+  border: 1px solid var(--gray-dark);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ledger-chip.is-active {
+  border-color: var(--lime);
+  background: var(--lime);
+  color: var(--bg);
+}
+
+/* 一覧 */
+.ledger-list ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ledger-row[hidden] {
+  display: none;
+}
+
+.ledger-row a {
+  display: grid;
+  grid-template-columns: 7em 7.5em 6em 1fr auto;
+  gap: 16px;
+  align-items: baseline;
+  padding: 16px 24px;
+  border-top: 1px solid var(--charcoal);
+  text-decoration: none;
+}
+
+.ledger-row a:hover {
+  background: var(--charcoal);
+}
+
+.ledger-row__no {
+  color: var(--lime);
+}
+
+.ledger-row__date,
+.ledger-row__stage {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--gray-light);
+}
+
+.ledger-row__type {
+  font-size: 13px;
+  color: var(--cyan);
+}
+
+.ledger-row__title {
+  font-size: 17px;
+}
+
+@media (max-width: 720px) {
+  .ledger-row a {
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+  }
+
+  .ledger-row__title {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .ledger-row__type,
+  .ledger-row__stage {
+    display: none;
+  }
+}
+
+/* ---------- 納税証明書（/ledger/NNN） ---------- */
+
+.cert {
+  padding: 48px 16px;
+}
+
+.cert__sheet {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px clamp(20px, 5vw, 56px);
+  background: var(--gray-light);
+  color: var(--bg);
+  border: 2px solid var(--bg);
+  outline: 1px solid var(--gray-light);
+  outline-offset: 6px;
+}
+
+.cert__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--bg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.cert__kind {
+  font-family: var(--font-pixel);
+  font-size: 20px;
+  letter-spacing: 0.4em;
+}
+
+.cert__no {
+  color: var(--pink);
+}
+
+.cert__title {
+  margin: 32px 0 24px;
+  font-size: clamp(26px, 5vw, 40px);
+  line-height: 1.3;
+}
+
+.cert__fields {
+  display: grid;
+  grid-template-columns: 6em 1fr;
+  margin: 0;
+  border-top: 1px solid var(--bg);
+}
+
+.cert__fields dt,
+.cert__fields dd {
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bg);
+}
+
+.cert__fields dt {
+  font-size: 13px;
+}
+
+.cert__note {
+  font-size: 12px;
+  color: var(--gray-dark);
+}
+
+.cert__stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+
+.cert__stages li {
+  padding: 2px 8px;
+  border: 1px solid var(--gray-dark);
+  color: var(--gray-dark);
+}
+
+.cert__stages li.is-done {
+  border-color: var(--bg);
+  color: var(--bg);
+}
+
+.cert__stages li.is-current {
+  background: var(--bg);
+  color: var(--lime);
+}
+
+.cert__body {
+  margin-top: 28px;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.cert__body p + p {
+  margin-top: 1em;
+}
+
+.cert__lineage {
+  margin-top: 28px;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.cert__lineage span {
+  margin-right: 12px;
+  color: var(--gray-dark);
+}
+
+.cert__lineage a {
+  margin-right: 16px;
+}
+
+.cert__links {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.cert__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 2px solid var(--bg);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.cert__issuer {
+  margin-top: 8px;
+  font-size: 22px;
+}
+
+.cert__stamp {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 84px;
+  height: 84px;
+  border: 3px solid var(--pink);
+  border-radius: 50%;
+  color: var(--pink);
+  font-size: 15px;
+  transform: rotate(-12deg);
+}
+
+.cert-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.ledger-foot {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}

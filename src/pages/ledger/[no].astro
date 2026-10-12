@@ -1,0 +1,97 @@
+---
+import Ledger from "../../layouts/Ledger.astro";
+import { entries, TYPE_LABELS, STAGES, NUMBER_LABELS, fileNo, byNo, derivedFrom, type Entry } from "../../lib/ledger";
+
+export function getStaticPaths() {
+  return entries.map((entry, i) => ({
+    params: { no: String(entry.no).padStart(3, "0") },
+    props: { entry, prev: entries[i - 1], next: entries[i + 1] },
+  }));
+}
+
+interface Props {
+  entry: Entry;
+  prev?: Entry;
+  next?: Entry;
+}
+const { entry: e, prev, next } = Astro.props;
+const href = (n: number) => `/ledger/${String(n).padStart(3, "0")}/`;
+const parents = e.related.map(byNo).filter((x): x is Entry => !!x);
+const children = derivedFrom(e.no);
+const paragraphs = e.body.split(/\n\n+/);
+const stageIndex = STAGES.indexOf(e.stage);
+const numbers = Object.entries(e.numbers ?? {});
+---
+
+<Ledger title={`${fileNo(e.no)} ${e.title} — 税金台帳`} description={paragraphs[0]}>
+  <section class="cert">
+    <div class="cert__sheet">
+      <header class="cert__header">
+        <p class="cert__form">様式 ZK-L-{String(e.no).padStart(3, "0")}</p>
+        <p class="cert__kind">納税証明書</p>
+        <p class="cert__no">{fileNo(e.no)}</p>
+      </header>
+
+      <h1 class="cert__title">{e.title}</h1>
+
+      <dl class="cert__fields">
+        <dt>種別</dt>
+        <dd>{TYPE_LABELS[e.type] ?? e.type}</dd>
+        <dt>日付</dt>
+        <dd>{e.date ?? "不詳"}{e.date_note && <span class="cert__note">（{e.date_note}）</span>}</dd>
+        {e.place && <><dt>場所</dt><dd>{e.place}</dd></>}
+        {e.people && e.people.length > 0 && <><dt>申告者</dt><dd>{e.people.join("・")}</dd></>}
+        {numbers.length > 0 && (
+          <>
+            <dt>数字</dt>
+            <dd>{numbers.map(([k, v]) => `${NUMBER_LABELS[k] ?? k} ${v}`).join(" / ")}</dd>
+          </>
+        )}
+        <dt>工程</dt>
+        <dd>
+          <ol class="cert__stages">
+            {STAGES.map((s, i) => (
+              <li class:list={{ "is-done": i <= stageIndex, "is-current": i === stageIndex }}>{s}</li>
+            ))}
+          </ol>
+        </dd>
+      </dl>
+
+      <div class="cert__body">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+
+      {(parents.length > 0 || children.length > 0) && (
+        <div class="cert__lineage">
+          {parents.length > 0 && (
+            <p><span>派生元</span>{parents.map((p) => <a href={href(p.no)}>{fileNo(p.no)} {p.title}</a>)}</p>
+          )}
+          {children.length > 0 && (
+            <p><span>派生先</span>{children.map((c) => <a href={href(c.no)}>{fileNo(c.no)} {c.title}</a>)}</p>
+          )}
+        </div>
+      )}
+
+      {e.links && e.links.length > 0 && (
+        <ul class="cert__links">
+          {e.links.map((l) => <li><a href={l} target="_blank" rel="noopener">{l}</a></li>)}
+        </ul>
+      )}
+
+      <footer class="cert__footer">
+        <div>
+          <p>受付 {e.filed}{e.filing && `（${e.filing}）`}</p>
+          <p>上記のとおり申告があったことを証明する。</p>
+          <p class="cert__issuer">税金</p>
+        </div>
+        <span class="cert__stamp">{e.status}</span>
+      </footer>
+    </div>
+  </section>
+
+  <nav class="cert-nav">
+    {prev ? <a href={href(prev.no)}>← {fileNo(prev.no)}</a> : <span />}
+    <a href="/ledger/">一覧</a>
+    {next ? <a href={href(next.no)}>{fileNo(next.no)} →</a> : <span />}
+  </nav>
+</Ledger>

@@ -1,0 +1,366 @@
+{
+  "generated_at": "2026-10-12T06:22:30.827Z",
+  "entries": [
+    {
+      "no": 1,
+      "title": "税金構文",
+      "type": "kobun",
+      "stage": "増殖",
+      "date": null,
+      "date_note": "始まりの時期は要確認",
+      "place": "Slack",
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "zeikin-kobun-syntax",
+      "body": "Slack の emoji をリアクションではなく文字として使い、文章を組み直す表現。普通の文字で書けばただの文章が、emoji の画像で組むと意味はそのままで見た目だけ奇妙になる。\n\n読んだ人も真似できる形式になったことが、のちのグッズ・配布・サイトすべての方法論になった。税金の最初の作品。"
+    },
+    {
+      "no": 2,
+      "title": "税金 emoji の制作",
+      "type": "kobun",
+      "stage": "増殖",
+      "date": null,
+      "date_note": "要確認",
+      "place": "Slack",
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": {
+        "emoji": 90
+      },
+      "related": [
+        1
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "zeikin-emoji",
+      "body": "構文に使う emoji そのものを自作するようになった。正方形の画像に文字を詰めたもの。構文メーカー（第016号）の採録時点で90個。"
+    },
+    {
+      "no": 3,
+      "title": "レゴによる構文の立体化",
+      "type": "kobun",
+      "stage": "増殖",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [
+        1,
+        2
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "lego-syntax",
+      "body": "税金構文をレゴで立体にした。画面の中の構文が、物理的なモノになった最初の例。"
+    },
+    {
+      "no": 4,
+      "title": "TAXHUND",
+      "type": "friend",
+      "stage": "形式化",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "taxhund",
+      "body": "札束に埋もれるダックスフント。空港で \"tax refund\" の表示を見た瞬間に生まれた。税金ストアのマスコット。"
+    },
+    {
+      "no": 5,
+      "title": "ザリガニ",
+      "type": "friend",
+      "stage": "形式化",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "zarigani",
+      "body": "フレンズ。ザリガニは特定外来種であり、無料の食事だ。"
+    },
+    {
+      "no": 6,
+      "title": "why? ポスター",
+      "type": "goods",
+      "stage": "流通",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "why-poster",
+      "body": "「なんで税金なの？」と誰もが聞く。我々もうまく答えられない。だからポスターには問いだけを刷った。why? はフレンズにもなった。"
+    },
+    {
+      "no": 7,
+      "title": "税金ストア開店",
+      "type": "shop",
+      "stage": "流通",
+      "date": null,
+      "date_note": "開店日は要確認（2025-06-29 以前）",
+      "place": "オンライン",
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [
+        4
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "zeikin-store",
+      "body": "Tシャツ・キャップ・トートバッグ・ステッカーのオリジナルグッズを販売。\n\nラインナップ（taxes™）: taxhund T-Shirt／T-Shirt／taxhund Sticker／tax Tote Bag／tax Cap／taxhund Cap／Zeikin Sticker"
+    },
+    {
+      "no": 8,
+      "title": "税務署（GitHub org）開設",
+      "type": "dev",
+      "stage": "受理",
+      "date": "2025-06-15",
+      "place": "github.com/zeikinorg",
+      "people": [
+        "豊田"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": [
+        "https://github.com/zeikinorg"
+      ],
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "github-org",
+      "body": "GitHub に organization `zeikinorg` を作成。プロフィールは「#みんな課税対象です」。"
+    },
+    {
+      "no": 9,
+      "title": "MOTTAINAI フリーマーケット出店",
+      "type": "event",
+      "stage": "流通",
+      "date": "2025-06-29",
+      "place": "中野セントラルパーク",
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [
+        7
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "mottainai-fleamarket",
+      "body": "税金ストアのグッズを持って出店。文脈を知らない通りすがりの人に、税金を手渡した最初の場。"
+    },
+    {
+      "no": 10,
+      "title": "税金ショップカード",
+      "type": "goods",
+      "stage": "流通",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [
+        4,
+        7
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "shop-card",
+      "body": "3D グラフィックでつくったショップカード。ピクセルアートのグラフィック「pixeltax」を背景に、ガラス質の「tax」のまわりを TAXHUND と全知全能の魚が泳ぐ。\n\n\"paying taxes™ is the chief end; LABOR ENABLES it.\""
+    },
+    {
+      "no": 11,
+      "title": "コンビニのレジ横でステッカー無料配布",
+      "type": "distribution",
+      "stage": "増殖",
+      "date": null,
+      "date_note": "開始日・期間は要確認",
+      "place": "セブンイレブン（店舗は要確認）",
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [
+        7
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "convenience-store-free",
+      "body": "税金ステッカーを「ご自由にお取りください」で無料配布。コンビニのレジは本物の税金を納める窓口でもある。その場所で、税金はタダで受け取れるものになった。"
+    },
+    {
+      "no": 12,
+      "title": "tax トレー",
+      "type": "goods",
+      "stage": "形式化",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "tax-tray",
+      "body": "TAX の文字を 3D モデリングして 3D プリンタで出力した、白いプラスチックのトレー。ステッカーや小物を受け止める。「なんでも受け止める器」がそのまま物理的な器になった。"
+    },
+    {
+      "no": 13,
+      "title": "言い訳bot",
+      "type": "dev",
+      "stage": "形式化",
+      "date": null,
+      "date_note": "要確認",
+      "place": null,
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": null,
+      "related": [
+        1
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "iiwake-bot",
+      "body": "（内容を追記してください）"
+    },
+    {
+      "no": 14,
+      "title": "zeikin.org 公開",
+      "type": "dev",
+      "stage": "流通",
+      "date": "2026-09-27",
+      "date_note": "初回コミット日。公開日は要確認",
+      "place": "https://zeikin.org",
+      "people": [
+        "豊田"
+      ],
+      "numbers": null,
+      "related": [],
+      "status": "受理",
+      "links": [
+        "https://zeikin.org/"
+      ],
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "zeikin-org",
+      "body": "税金の公式サイト。冗談は Web に記録された瞬間、検索され、リンクされ、知らない誰かに発見されるものになる。Astro + GitHub Pages。"
+    },
+    {
+      "no": 15,
+      "title": "WIRED CREATIVE HACK AWARD 2026 に申告",
+      "type": "award",
+      "stage": "流通",
+      "date": "2026-09-30",
+      "place": "オンライン",
+      "people": [
+        "豊田",
+        "石川"
+      ],
+      "numbers": {
+        "pages": 12
+      },
+      "related": [
+        1,
+        7,
+        11,
+        14
+      ],
+      "status": "審査中",
+      "links": [
+        "https://zeikin.org/CREATIVE-HACK-AWARD/"
+      ],
+      "filed": "2026-10-12",
+      "filing": "期限後申告",
+      "slug": "wired-creative-hack-award-2026",
+      "body": "作品タイトル「税金：思いつきを、終わらせない。」。申告書のフォーマットで12ページの応募 PDF をつくり、zeikin.org で公開した。ファイナリスト発表は11月中旬の予定。"
+    },
+    {
+      "no": 17,
+      "title": "税金台帳 開設",
+      "type": "dev",
+      "stage": "受理",
+      "date": "2026-10-12",
+      "place": "github.com/zeikinorg/ledger",
+      "people": [
+        "豊田"
+      ],
+      "numbers": null,
+      "related": [
+        8
+      ],
+      "status": "受理",
+      "links": null,
+      "filed": "2026-10-12",
+      "slug": "zeikin-ledger",
+      "body": "税金の活動をすべて申告として番号で記録する台帳。第001号から第016号は、この日にまとめて遡って申告した（期限後申告）。"
+    }
+  ]
+}
