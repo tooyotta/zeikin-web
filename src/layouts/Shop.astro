@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+import "../styles/shop.css";
+import Ticker from "../components/Ticker.astro";
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Fragment+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <Ticker as="header" />
+      <slot />
+      <footer class="shop-foot">
+        <a href="/">zeikin.org</a>
+        <a href="/shop/">税金ストア</a>
+        <a href="/shop/law/">特定商取引法に基づく表記</a>
+      </footer>
+    </div>
+  </body>
+</html>

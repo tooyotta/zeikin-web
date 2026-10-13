@@ -1,0 +1,216 @@
+/* ---------- 税金ストア（/shop） ---------- */
+
+.shop-head {
+  padding: 64px 24px 48px;
+}
+
+.shop-head__form {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lime);
+  letter-spacing: 0.08em;
+}
+
+.shop-head__title {
+  margin-top: 16px;
+  font-size: clamp(44px, 9vw, 112px);
+  line-height: 1.05;
+}
+
+.shop-head__title--small {
+  font-size: clamp(28px, 5vw, 48px);
+}
+
+.shop-head__lead {
+  margin-top: 24px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--gray-light);
+}
+
+.shop-head__back {
+  margin-top: 32px;
+  font-family: var(--font-mono);
+}
+
+.shop-status {
+  padding: 48px 24px;
+  color: var(--gray-light);
+}
+
+/* 商品 */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.shop-grid > .shop-status {
+  grid-column: 1 / -1;
+}
+
+/* 区切りは各カードの右と下の線で引く（商品が1点でも余白が白く抜けないように） */
+.product {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 28px 24px;
+  border-right: 1px solid var(--charcoal);
+  border-bottom: 1px solid var(--charcoal);
+}
+
+.product.is-sold-out .product__name,
+.product.is-sold-out .product__price {
+  color: var(--gray-dark);
+}
+
+.product__name {
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.product__desc {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--gray-light);
+}
+
+.product__meta {
+  display: grid;
+  grid-template-columns: 5em 1fr;
+  margin: 0;
+  border-top: 1px solid var(--charcoal);
+}
+
+.product__meta dt,
+.product__meta dd {
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--charcoal);
+}
+
+.product__meta dt {
+  font-size: 13px;
+  color: var(--gray-light);
+}
+
+.product__price {
+  font-family: var(--font-sun);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--lime);
+}
+
+.product__stock {
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.product__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.product__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--gray-light);
+}
+
+.product__field[hidden] {
+  display: none;
+}
+
+.product__field select,
+.product__field input {
+  min-width: 5em;
+  padding: 10px 12px;
+  border: 1px solid var(--gray-dark);
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 16px;
+}
+
+.product__buy {
+  flex: 1 1 140px;
+  padding: 14px 20px;
+  border: 0;
+  background: var(--lime);
+  color: var(--bg);
+  font: inherit;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.product__buy:hover:not(:disabled) {
+  background: var(--fg);
+}
+
+.product__buy:disabled {
+  background: var(--charcoal);
+  color: var(--gray-dark);
+  cursor: not-allowed;
+}
+
+.product__error {
+  flex-basis: 100%;
+  font-size: 13px;
+  color: var(--pink);
+}
+
+/* 特定商取引法に基づく表記 */
+.law {
+  padding: 0 24px 64px;
+}
+
+.law dl {
+  display: grid;
+  grid-template-columns: minmax(9em, 14em) 1fr;
+  max-width: 880px;
+  margin: 0;
+  border-top: 1px solid var(--charcoal);
+}
+
+.law dt,
+.law dd {
+  margin: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--charcoal);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.law dt {
+  color: var(--gray-light);
+}
+
+.law dd.is-todo {
+  color: var(--pink);
+}
+
+@media (max-width: 600px) {
+  .law dl {
+    grid-template-columns: 1fr;
+  }
+
+  .law dt {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+
+.shop-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}

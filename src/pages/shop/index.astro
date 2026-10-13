@@ -1,0 +1,127 @@
+---
+import Shop from "../../layouts/Shop.astro";
+const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
+---
+
+<Shop title="税金ストア — zeikin.org" description="税金のグッズを、納税する。">
+  <section class="shop-head">
+    <p class="shop-head__form">様式 ZK-S　税金ストア</p>
+    <h1 class="shop-head__title">税金ストア</h1>
+    <p class="shop-head__lead">税金のグッズを、納税する。<br />イベントの店頭と同じ在庫から発送します。</p>
+  </section>
+
+  <section class="shop-grid" data-api={api} aria-live="polite">
+    <p class="shop-status">読み込み中…</p>
+  </section>
+</Shop>
+
+<template id="product-card">
+  <article class="product">
+    <div class="product__body">
+      <h2 class="product__name"></h2>
+      <p class="product__desc"></p>
+    </div>
+    <dl class="product__meta">
+      <dt>納税額</dt>
+      <dd class="product__price"></dd>
+      <dt>在庫</dt>
+      <dd class="product__stock"></dd>
+    </dl>
+    <form class="product__form">
+      <label class="product__field product__field--variation">
+        <span>種類</span>
+        <select name="variation"></select>
+      </label>
+      <label class="product__field">
+        <span>数量</span>
+        <input name="quantity" type="number" min="1" max="10" value="1" inputmode="numeric" />
+      </label>
+      <button type="submit" class="product__buy">納税する</button>
+      <p class="product__error" role="alert" hidden></p>
+    </form>
+  </article>
+</template>
+
+<script>
+  interface Variation {
+    id: string;
+    name: string;
+    price: number | null;
+    stock: number | null;
+  }
+  interface Product {
+    id: string;
+    name: string;
+    description: string;
+    variations: Variation[];
+  }
+
+  const grid = document.querySelector<HTMLElement>(".shop-grid")!;
+  const api = grid.dataset.api!;
+  const template = document.querySelector<HTMLTemplateElement>("#product-card")!;
+  const yen = (n: number | null) => (n === null ? "—" : `¥${n.toLocaleString("ja-JP")}`);
+
+  function render(product: Product) {
+    const card = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+    const $ = <T extends Element>(sel: string) => card.querySelector<T>(sel)!;
+    $(".product__name").textContent = product.name;
+    $(".product__desc").textContent = product.description;
+
+    const select = $<HTMLSelectElement>("select");
+    for (const v of product.variations) select.add(new Option(v.name, v.id));
+    if (product.variations.length < 2) $(".product__field--variation").hidden = true;
+
+    const quantity = $<HTMLInputElement>("input[name=quantity]");
+    const button = $<HTMLButtonElement>(".product__buy");
+    const error = $<HTMLElement>(".product__error");
+
+    const current = () => product.variations.find((v) => v.id === select.value)!;
+    const update = () => {
+      const v = current();
+      $(".product__price").textContent = yen(v.price);
+      const soldOut = v.stock !== null && v.stock < 1;
+      $(".product__stock").textContent = v.stock === null ? "あり" : soldOut ? "完納（売り切れ）" : `残り ${v.stock}`;
+      quantity.max = String(Math.min(10, v.stock ?? 10));
+      button.disabled = soldOut;
+      button.textContent = soldOut ? "完納" : "納税する";
+      card.classList.toggle("is-sold-out", soldOut);
+    };
+    select.addEventListener("change", update);
+    update();
+
+    $<HTMLFormElement>("form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      error.hidden = true;
+      button.disabled = true;
+      button.textContent = "手続き中…";
+      try {
+        const res = await fetch(`${api}/api/checkout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ variationId: select.value, quantity: Number(quantity.value) }),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.error ?? "手続きに失敗しました");
+        location.href = body.url;
+      } catch (err) {
+        error.textContent = err instanceof Error ? err.message : "手続きに失敗しました";
+        error.hidden = false;
+        update();
+      }
+    });
+    return card;
+  }
+
+  async function load() {
+    try {
+      const res = await fetch(`${api}/api/products`);
+      if (!res.ok) throw new Error();
+      const { products } = (await res.json()) as { products: Product[] };
+      grid.replaceChildren(...products.map(render));
+      if (!products.length) grid.innerHTML = '<p class="shop-status">いま申告できるグッズはありません。</p>';
+    } catch {
+      grid.innerHTML = '<p class="shop-status">ストアに接続できませんでした。時間をおいて再読み込みしてください。</p>';
+    }
+  }
+  load();
+</script>
