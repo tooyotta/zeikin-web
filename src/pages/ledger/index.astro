@@ -1,79 +1,163 @@
 ---
 import Ledger from "../../layouts/Ledger.astro";
-import { entries, TYPE_LABELS, STAGES, NUMBER_LABELS, fileNo } from "../../lib/ledger";
+import Lineage from "../../components/Lineage.astro";
+import {
+  entries, STAGES, NUMBER_LABELS, fileNo, pad, hrefOf, typeLabel, stageIndex, dateLabel, ordered,
+} from "../../lib/ledger";
 
 // 見出しの集計に出すのは活動量を表す数字だけ（ページ数などは個別の証明書に出す）
 const HEADLINE_NUMBERS = ["sold", "distributed", "visitors"];
 
-const latest = [...entries].reverse();
-const types = [...new Set(entries.map((e) => e.type))];
+const latest = [...ordered].reverse();
+const types = [...new Set(ordered.map((e) => e.type))];
+const typeCount = (t: string) => entries.filter((e) => e.type === t).length;
 const stageCounts = STAGES.map((s) => [s, entries.filter((e) => e.stage === s).length] as const);
 const totals: Record<string, number> = {};
 for (const e of entries)
   for (const [k, v] of Object.entries(e.numbers ?? {})) if (HEADLINE_NUMBERS.includes(k)) totals[k] = (totals[k] ?? 0) + v;
+const dated = entries.map((e) => e.date).filter((d): d is string => !!d).sort();
+const lastNo = ordered.at(-1)!.no;
 ---
 
 <Ledger title="税金台帳 — zeikin.org" description="税金の活動を、すべて申告として番号で記録する台帳。">
-  <section class="ledger-head">
-    <p class="ledger-head__form">様式 ZK-L　税金台帳</p>
-    <h1 class="ledger-head__title">税金台帳</h1>
-    <p class="ledger-head__lead">
+  <section class="lg-hero">
+    <p class="lg-hero__form">様式 ZK-L　税金台帳　第001号 — {fileNo(lastNo)}</p>
+    <h1 class="lg-hero__title">
+      <span class="l1">ZEIKIN FILES</span>
+      <span class="l2">EVERY ACT</span>
+      <span class="l3">AS A TAX RETURN<span class="blink">.</span></span>
+    </h1>
+    <p class="lg-hero__lead">
       税金の活動は、すべて申告として番号で記録される。<br />
       開発も、出店も、配布も、思いつきも、同じ台帳に積む。
     </p>
   </section>
 
-  <section class="ledger-stats" aria-label="集計">
-    <div class="ledger-stat ledger-stat--main">
-      <span class="ledger-stat__value">{entries.length}</span>
-      <span class="ledger-stat__label">申告</span>
+  <section class="lg-sum" aria-label="集計表" style={`--extra:${Object.keys(totals).length + 1}`}>
+    <div class="lg-sum__cell lg-sum__cell--total">
+      <span class="lg-sum__k">申告総数</span>
+      <span class="lg-sum__v">{entries.length}</span>
     </div>
-    {stageCounts.map(([s, n]) => (
-      <div class="ledger-stat">
-        <span class="ledger-stat__value">{n}</span>
-        <span class="ledger-stat__label">{s}</span>
-      </div>
-    ))}
+    <div class="lg-sum__cell lg-sum__cell--stages">
+      <span class="lg-sum__k">工程別</span>
+      <ol class="lg-flow">
+        {stageCounts.map(([s, n], i) => (
+          <li style={`--n:${n}`}>
+            <span class="lg-flow__i">{String(i + 1).padStart(2, "0")}</span>
+            <span class="lg-flow__s">{s}</span>
+            <span class="lg-flow__n">{n}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
     {Object.entries(totals).map(([k, v]) => (
-      <div class="ledger-stat">
-        <span class="ledger-stat__value">{v}</span>
-        <span class="ledger-stat__label">{NUMBER_LABELS[k] ?? k}</span>
+      <div class="lg-sum__cell">
+        <span class="lg-sum__k">{NUMBER_LABELS[k] ?? k}</span>
+        <span class="lg-sum__v">{v}</span>
       </div>
     ))}
+    <div class="lg-sum__cell">
+      <span class="lg-sum__k">記録期間</span>
+      <span class="lg-sum__v lg-sum__v--s">
+        {dated.length ? <>{dateLabel(dated[0]).slice(0, 7)}<br />— {dateLabel(dated.at(-1)!).slice(0, 7)}</> : "—"}
+      </span>
+    </div>
   </section>
 
-  <section class="ledger-filter" aria-label="種別で絞り込む">
-    <button type="button" class="ledger-chip is-active" data-type="all">すべて</button>
-    {types.map((t) => (
-      <button type="button" class="ledger-chip" data-type={t}>{TYPE_LABELS[t] ?? t}</button>
-    ))}
-  </section>
+  <section id="records" class="lg-records" aria-label="申告一覧">
+    <div class="lg-filter" role="group" aria-label="種別で絞り込む">
+      <button type="button" class="lg-tag is-active" data-type="all" aria-pressed="true">
+        すべて<sup>{entries.length}</sup>
+      </button>
+      {types.map((t) => (
+        <button type="button" class="lg-tag" data-type={t} aria-pressed="false">
+          #{typeLabel(t)}<sup>{typeCount(t)}</sup>
+        </button>
+      ))}
+    </div>
 
-  <section class="ledger-list">
-    <ol>
+    <ol class="lg-list">
       {latest.map((e) => (
-        <li class="ledger-row" data-type={e.type}>
-          <a href={`/ledger/${String(e.no).padStart(3, "0")}/`}>
-            <span class="ledger-row__no">{fileNo(e.no)}</span>
-            <span class="ledger-row__date">{e.date ?? "日付不詳"}</span>
-            <span class="ledger-row__type">{TYPE_LABELS[e.type] ?? e.type}</span>
-            <span class="ledger-row__title">{e.title}</span>
-            <span class="ledger-row__stage">{e.stage}</span>
+        <li class="lg-row" data-type={e.type} data-no={e.no}>
+          <a href={hrefOf(e.no)}>
+            <span class="lg-row__no" style={`view-transition-name: no-${pad(e.no)}`}>
+              <small>第</small>{pad(e.no)}<small>号</small>
+            </span>
+            <span class="lg-row__title">{e.title}</span>
+            <span class="lg-row__meta">
+              <span class="lg-row__type">#{typeLabel(e.type)}</span>
+              <span class="lg-row__date">{dateLabel(e.date)}</span>
+            </span>
+            <span class="lg-row__stage" aria-label={`工程 ${e.stage}`}>
+              <span class="lg-meter" style={`--si:${stageIndex(e.stage)}`}>
+                {STAGES.map((_, i) => <i class:list={{ on: i <= stageIndex(e.stage) }} />)}
+              </span>
+              <span class="lg-row__stagename">{e.stage}</span>
+            </span>
+            <span class="lg-row__go" aria-hidden="true">→</span>
           </a>
         </li>
       ))}
     </ol>
+    <p class="lg-empty" hidden>該当する申告はありません。</p>
   </section>
+
+  <section id="lineage" class="lg-section">
+    <header class="lg-section__head">
+      <p class="lg-section__no">様式 ZK-L 別表</p>
+      <h2 class="lg-section__title">系譜</h2>
+      <p class="lg-section__lead">ひとつの申告から、次の申告が生まれる。番号の上に触れると、その系譜だけが浮かぶ。</p>
+    </header>
+    <Lineage label="全申告の派生関係" />
+  </section>
+
+  <div class="lg-counter" aria-hidden="true">
+    <span class="lg-counter__no">{pad(lastNo)}</span>
+    <span class="lg-counter__of">/ {entries.length} 件</span>
+  </div>
 </Ledger>
 
 <script>
-  const chips = document.querySelectorAll<HTMLButtonElement>(".ledger-chip");
-  const rows = document.querySelectorAll<HTMLElement>(".ledger-row");
-  chips.forEach((chip) =>
-    chip.addEventListener("click", () => {
-      chips.forEach((c) => c.classList.toggle("is-active", c === chip));
-      const t = chip.dataset.type;
-      rows.forEach((r) => (r.hidden = t !== "all" && r.dataset.type !== t));
-    }),
+  const tags = [...document.querySelectorAll<HTMLButtonElement>(".lg-tag")];
+  const rows = [...document.querySelectorAll<HTMLElement>(".lg-row")];
+  const nodes = [...document.querySelectorAll<SVGElement>(".lin__node")];
+  const empty = document.querySelector<HTMLElement>(".lg-empty")!;
+  const counterNo = document.querySelector<HTMLElement>(".lg-counter__no")!;
+  const counterOf = document.querySelector<HTMLElement>(".lg-counter__of")!;
+  const pad = (n: string | number) => String(n).padStart(3, "0");
+
+  const apply = (t: string, push = false) => {
+    if (!tags.some((c) => c.dataset.type === t)) t = "all";
+    tags.forEach((c) => {
+      const on = c.dataset.type === t;
+      c.classList.toggle("is-active", on);
+      c.setAttribute("aria-pressed", String(on));
+    });
+    let shown = 0;
+    rows.forEach((r) => {
+      const hide = t !== "all" && r.dataset.type !== t;
+      r.hidden = hide;
+      if (!hide) shown++;
+    });
+    nodes.forEach((n) => n.classList.toggle("is-dim", t !== "all" && n.dataset.type !== t));
+    empty.hidden = shown > 0;
+    counterOf.textContent = `/ ${shown} 件`;
+    const first = rows.find((r) => !r.hidden);
+    if (first) counterNo.textContent = pad(first.dataset.no!);
+    if (push) history.replaceState(null, "", t === "all" ? location.pathname : `#type=${t}`);
+  };
+  tags.forEach((c) => c.addEventListener("click", () => apply(c.dataset.type!, true)));
+  const fromHash = location.hash.match(/^#type=([\w-]+)$/);
+  if (fromHash) apply(fromHash[1]);
+
+  // 画面に入った行を浮かび上がらせ、画面中央を通過中の号を右下のカウンタに出す
+  const reveal = new IntersectionObserver(
+    (list) => list.forEach((it) => it.isIntersecting && (it.target.classList.add("is-in"), reveal.unobserve(it.target))),
+    { threshold: 0.01 },
   );
+  const band = new IntersectionObserver(
+    (list) => list.forEach((it) => it.isIntersecting && (counterNo.textContent = pad((it.target as HTMLElement).dataset.no!))),
+    { rootMargin: "-45% 0px -50% 0px" },
+  );
+  rows.forEach((r) => (reveal.observe(r), band.observe(r)));
 </script>

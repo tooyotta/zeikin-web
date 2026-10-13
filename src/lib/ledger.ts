@@ -48,3 +48,11 @@ export const NUMBER_LABELS: Record<string, string> = {
 export const fileNo = (no: number) => `第${String(no).padStart(3, "0")}号`;
 export const byNo = (no: number) => entries.find((e) => e.no === no);
 export const derivedFrom = (no: number) => entries.filter((e) => e.related.includes(no));
+
+export const pad = (no: number) => String(no).padStart(3, "0");
+export const hrefOf = (no: number) => `/ledger/${pad(no)}/`;
+export const typeLabel = (t: string) => TYPE_LABELS[t] ?? t;
+export const stageIndex = (s: string) => STAGES.indexOf(s);
+// 2025-06-15 → 2025.06.15。日付が無いものは「日付不詳」
+export const dateLabel = (d: string | null) => (d ? d.replaceAll("-", ".") : "日付不詳");
+export const ordered = [...entries].sort((a, b) => a.no - b.no);

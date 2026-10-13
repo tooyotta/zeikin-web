@@ -6,8 +6,9 @@ import Ticker from "../components/Ticker.astro";
 interface Props {
   title: string;
   description: string;
+  crumb?: string;
 }
-const { title, description } = Astro.props;
+const { title, description, crumb } = Astro.props;
 ---
 
 <!doctype html>
@@ -26,15 +27,34 @@ const { title, description } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Fragment+Mono&family=VT323&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      document.documentElement.classList.add("js");
+      // 画面遷移アニメが省略されたとき（非表示タブ等）の未処理エラーを黙らせる
+      for (const ev of ["pageswap", "pagereveal"])
+        addEventListener(ev, (e) => e.viewTransition && e.viewTransition.ready.catch(() => {}));
+    </script>
   </head>
-  <body>
-    <div class="page">
-      <Ticker as="header" />
-      <slot />
-      <footer class="ledger-foot">
+  <body class="lg-body">
+    <Ticker as="div" />
+    <header class="lg-bar">
+      <a class="lg-bar__home" href="/ledger/">税金台帳<span>ZK-L</span></a>
+      {crumb && <span class="lg-bar__crumb">{crumb}</span>}
+      <nav class="lg-bar__nav">
+        <a href="/ledger/#records">申告</a>
+        <a href="/ledger/#lineage">系譜</a>
         <a href="/">zeikin.org</a>
+      </nav>
+    </header>
+    <main class="lg">
+      <slot />
+    </main>
+    <footer class="lg-foot">
+      <p class="lg-foot__mark">すべての活動は、申告として台帳に積まれる。</p>
+      <p class="lg-foot__meta">
         <a href="/ledger/">税金台帳</a>
-      </footer>
-    </div>
+        <a href="/">zeikin.org</a>
+        <span>様式 ZK-L</span>
+      </p>
+    </footer>
   </body>
 </html>

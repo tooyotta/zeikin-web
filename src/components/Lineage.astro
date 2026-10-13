@@ -1,0 +1,140 @@
+---
+// 系譜図: 全申告を番号順に一列に並べ、派生（related）を弧で結ぶ。
+// 各申告の下の5段の目盛りは工程（思いつき→増殖）の到達度。
+import { ordered, pad, hrefOf, typeLabel, stageIndex, STAGES } from "../lib/ledger";
+
+interface Props {
+  focus?: number;
+  label?: string;
+}
+const { focus, label = "系譜図" } = Astro.props;
+
+const GAP = 64;
+const PADX = 36;
+const xOf = new Map(ordered.map((e, i) => [e.no, PADX + i * GAP]));
+const W = PADX * 2 + (ordered.length - 1) * GAP;
+const links = ordered.flatMap((e) =>
+  e.related.filter((r) => xOf.has(r)).map((r) => ({ from: r, to: e.no })),
+);
+const radius = (l: { from: number; to: number }) => (xOf.get(l.to)! - xOf.get(l.from)!) / 2;
+// 弧は横長の楕円にして、長い派生でも図が縦に間延びしないようにする
+const FLAT = 0.5;
+const maxR = Math.max(GAP / 2, ...links.map(radius)) * FLAT;
+const BASE = Math.ceil(maxR) + 18;
+const TICK = 7;
+const H = BASE + 14 + STAGES.length * (TICK + 3) + 30;
+---
+
+<figure class="lin" data-lineage data-focus={focus ?? ""}>
+  <div class="lin__scroll">
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} style={`--w:${W}`}>
+      <line class="lin__axis" x1={PADX - 18} x2={W - PADX + 18} y1={BASE} y2={BASE} />
+      {links.map((l) => {
+        const x1 = xOf.get(l.from)!;
+        const x2 = xOf.get(l.to)!;
+        const r = radius(l);
+        const ry = r * FLAT;
+        return (
+          <path
+            class="lin__arc"
+            data-from={l.from}
+            data-to={l.to}
+            d={`M ${x1} ${BASE} A ${r} ${ry} 0 0 1 ${x2} ${BASE}`}
+            style={`--len:${Math.ceil(Math.PI * Math.sqrt((r * r + ry * ry) / 2)) + 2}`}
+          />
+        );
+      })}
+      {ordered.map((e) => {
+        const x = xOf.get(e.no)!;
+        const si = stageIndex(e.stage);
+        return (
+          <a
+            class="lin__node"
+            href={hrefOf(e.no)}
+            data-no={e.no}
+            data-type={e.type}
+            aria-label={`第${pad(e.no)}号 ${e.title}（${typeLabel(e.type)}・${e.stage}）`}
+          >
+            <title>{`第${pad(e.no)}号 ${e.title}`}</title>
+            <rect class="lin__hit" x={x - GAP / 2} y={0} width={GAP} height={H} />
+            <rect class="lin__dot" x={x - 4} y={BASE - 4} width="8" height="8" />
+            {STAGES.map((_, i) => (
+              <rect
+                class:list={["lin__tick", { "is-on": i <= si }]}
+                x={x - 6}
+                y={BASE + 14 + i * (TICK + 3)}
+                width="12"
+                height={TICK}
+              />
+            ))}
+            <text class="lin__label" x={x} y={H - 8} text-anchor="middle">{pad(e.no)}</text>
+          </a>
+        );
+      })}
+    </svg>
+  </div>
+  <figcaption class="lin__cap">
+    <span>弧 = 派生（左の申告から右の申告が生まれた）</span>
+    <span>目盛り = 工程 {STAGES.join(" → ")}</span>
+  </figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-lineage]").forEach((fig) => {
+    const arcs = [...fig.querySelectorAll<SVGPathElement>(".lin__arc")];
+    const nodes = [...fig.querySelectorAll<SVGAElement>(".lin__node")];
+    const up = new Map<number, number[]>();
+    const down = new Map<number, number[]>();
+    for (const a of arcs) {
+      const f = Number(a.dataset.from);
+      const t = Number(a.dataset.to);
+      up.set(t, [...(up.get(t) ?? []), f]);
+      down.set(f, [...(down.get(f) ?? []), t]);
+    }
+    const walk = (start: number, map: Map<number, number[]>, acc: Set<number>) => {
+      for (const n of map.get(start) ?? []) if (!acc.has(n)) (acc.add(n), walk(n, map, acc));
+      return acc;
+    };
+    const home = fig.dataset.focus ? Number(fig.dataset.focus) : null;
+    const trace = (no: number | null) => {
+      fig.classList.toggle("is-tracing", no !== null);
+      if (no === null) {
+        nodes.forEach((n) => n.classList.remove("is-on", "is-focus"));
+        arcs.forEach((a) => a.classList.remove("is-on"));
+        return;
+      }
+      const set = walk(no, up, new Set([no]));
+      walk(no, down, set);
+      nodes.forEach((n) => {
+        const k = Number(n.dataset.no);
+        n.classList.toggle("is-on", set.has(k));
+        n.classList.toggle("is-focus", k === no);
+      });
+      arcs.forEach((a) =>
+        a.classList.toggle("is-on", set.has(Number(a.dataset.from)) && set.has(Number(a.dataset.to))),
+      );
+    };
+    nodes.forEach((n) => {
+      const k = Number(n.dataset.no);
+      n.addEventListener("mouseenter", () => trace(k));
+      n.addEventListener("focus", () => trace(k));
+      n.addEventListener("mouseleave", () => trace(home));
+      n.addEventListener("blur", () => trace(home));
+    });
+    trace(home);
+    // 横スクロールになる幅では、注目の申告が見える位置まで送っておく
+    const box = fig.querySelector<HTMLElement>(".lin__scroll")!;
+    const focusDot = home !== null ? fig.querySelector<SVGGraphicsElement>(`.lin__node[data-no="${home}"] .lin__dot`) : null;
+    if (focusDot && box.scrollWidth > box.clientWidth) {
+      const b = focusDot.getBoundingClientRect();
+      const o = box.getBoundingClientRect();
+      box.scrollLeft = b.left - o.left - box.clientWidth / 2;
+    }
+    // 画面に入ったら弧を引く
+    const io = new IntersectionObserver(
+      (list) => list.some((it) => it.isIntersecting) && (fig.classList.add("is-drawn"), io.disconnect()),
+      { threshold: 0.15 },
+    );
+    io.observe(fig);
+  });
+</script>

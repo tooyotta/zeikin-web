@@ -1,11 +1,14 @@
 ---
 import Ledger from "../../layouts/Ledger.astro";
-import { entries, TYPE_LABELS, STAGES, NUMBER_LABELS, fileNo, byNo, derivedFrom, type Entry } from "../../lib/ledger";
+import Lineage from "../../components/Lineage.astro";
+import {
+  ordered, STAGES, NUMBER_LABELS, fileNo, byNo, derivedFrom, pad, hrefOf, typeLabel, dateLabel, type Entry,
+} from "../../lib/ledger";
 
 export function getStaticPaths() {
-  return entries.map((entry, i) => ({
-    params: { no: String(entry.no).padStart(3, "0") },
-    props: { entry, prev: entries[i - 1], next: entries[i + 1] },
+  return ordered.map((entry, i) => ({
+    params: { no: pad(entry.no) },
+    props: { entry, prev: ordered[i - 1], next: ordered[i + 1] },
   }));
 }
 
@@ -15,83 +18,122 @@ interface Props {
   next?: Entry;
 }
 const { entry: e, prev, next } = Astro.props;
-const href = (n: number) => `/ledger/${String(n).padStart(3, "0")}/`;
 const parents = e.related.map(byNo).filter((x): x is Entry => !!x);
 const children = derivedFrom(e.no);
 const paragraphs = e.body.split(/\n\n+/);
-const stageIndex = STAGES.indexOf(e.stage);
+const si = STAGES.indexOf(e.stage);
 const numbers = Object.entries(e.numbers ?? {});
+const circled = "①②③④⑤⑥⑦⑧⑨";
+const fields: [string, string, string?][] = [
+  ["種別", typeLabel(e.type)],
+  ["日付", e.date ? dateLabel(e.date) : "不詳", e.date_note],
+  ["場所", e.place ?? "—"],
+  ["申告者", e.people?.length ? e.people.join("・") : "—"],
+  ["数字", numbers.length ? numbers.map(([k, v]) => `${NUMBER_LABELS[k] ?? k} ${v}`).join(" / ") : "—"],
+  ["受付", e.filed, e.filing],
+];
 ---
 
-<Ledger title={`${fileNo(e.no)} ${e.title} — 税金台帳`} description={paragraphs[0]}>
-  <section class="cert">
-    <div class="cert__sheet">
-      <header class="cert__header">
-        <p class="cert__form">様式 ZK-L-{String(e.no).padStart(3, "0")}</p>
-        <p class="cert__kind">納税証明書</p>
-        <p class="cert__no">{fileNo(e.no)}</p>
-      </header>
+<Ledger
+  title={`${fileNo(e.no)} ${e.title} — 税金台帳`}
+  description={paragraphs[0]}
+  crumb={fileNo(e.no)}
+>
+  <article class="cert" data-prev={prev && hrefOf(prev.no)} data-next={next && hrefOf(next.no)}>
+    <header class="cert-hero">
+      <p class="cert-hero__form">様式 ZK-L-{pad(e.no)}　納税証明書</p>
+      <p class="cert-hero__no" style={`view-transition-name: no-${pad(e.no)}`}>
+        <small>第</small>{pad(e.no)}<small>号</small>
+      </p>
+      <h1 class="cert-hero__title">{e.title}</h1>
+      <p class="cert-hero__tags">
+        <span>#{typeLabel(e.type)}</span><span>{e.stage}</span><span>{e.status}</span>
+      </p>
+    </header>
 
-      <h1 class="cert__title">{e.title}</h1>
+    <section class="cert-form" aria-label="記載事項">
+      {fields.map(([k, v, note], i) => (
+        <div class="cert-form__cell">
+          <span class="cert-form__k">{circled[i]} {k}</span>
+          <span class="cert-form__v">{v}</span>
+          {note && <span class="cert-form__note">{note}</span>}
+        </div>
+      ))}
+    </section>
 
-      <dl class="cert__fields">
-        <dt>種別</dt>
-        <dd>{TYPE_LABELS[e.type] ?? e.type}</dd>
-        <dt>日付</dt>
-        <dd>{e.date ?? "不詳"}{e.date_note && <span class="cert__note">（{e.date_note}）</span>}</dd>
-        {e.place && <><dt>場所</dt><dd>{e.place}</dd></>}
-        {e.people && e.people.length > 0 && <><dt>申告者</dt><dd>{e.people.join("・")}</dd></>}
-        {numbers.length > 0 && (
-          <>
-            <dt>数字</dt>
-            <dd>{numbers.map(([k, v]) => `${NUMBER_LABELS[k] ?? k} ${v}`).join(" / ")}</dd>
-          </>
-        )}
-        <dt>工程</dt>
-        <dd>
-          <ol class="cert__stages">
-            {STAGES.map((s, i) => (
-              <li class:list={{ "is-done": i <= stageIndex, "is-current": i === stageIndex }}>{s}</li>
-            ))}
-          </ol>
-        </dd>
-      </dl>
+    <section class="cert-stages" aria-label={`工程 ${si + 1}/${STAGES.length}：${e.stage}`}>
+      <p class="cert-label">⑦ 工程</p>
+      <ol style={`--si:${si}`}>
+        {STAGES.map((s, i) => (
+          <li class:list={{ "is-done": i <= si, "is-current": i === si }}>
+            <span class="cert-stages__i">{String(i + 1).padStart(2, "0")}</span>
+            <span class="cert-stages__s">{s}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
 
-      <div class="cert__body">
+    <section class="cert-body">
+      <p class="cert-label">⑧ 申告内容</p>
+      <div class="cert-body__text">
         {paragraphs.map((p) => <p>{p}</p>)}
       </div>
-
-      {(parents.length > 0 || children.length > 0) && (
-        <div class="cert__lineage">
-          {parents.length > 0 && (
-            <p><span>派生元</span>{parents.map((p) => <a href={href(p.no)}>{fileNo(p.no)} {p.title}</a>)}</p>
-          )}
-          {children.length > 0 && (
-            <p><span>派生先</span>{children.map((c) => <a href={href(c.no)}>{fileNo(c.no)} {c.title}</a>)}</p>
-          )}
-        </div>
-      )}
-
       {e.links && e.links.length > 0 && (
-        <ul class="cert__links">
-          {e.links.map((l) => <li><a href={l} target="_blank" rel="noopener">{l}</a></li>)}
+        <ul class="cert-body__links">
+          {e.links.map((l) => <li><a href={l} target="_blank" rel="noopener">{l.replace(/^https?:\/\//, "")} ↗</a></li>)}
         </ul>
       )}
+    </section>
 
-      <footer class="cert__footer">
+    <section class="cert-lineage">
+      <p class="cert-label">⑨ 系譜</p>
+      <div class="cert-lineage__cols">
         <div>
-          <p>受付 {e.filed}{e.filing && `（${e.filing}）`}</p>
-          <p>上記のとおり申告があったことを証明する。</p>
-          <p class="cert__issuer">税金</p>
+          <p class="cert-lineage__h">派生元</p>
+          {parents.length ? (
+            <ul>{parents.map((p) => <li><a href={hrefOf(p.no)}><b>{fileNo(p.no)}</b>{p.title}</a></li>)}</ul>
+          ) : <p class="cert-lineage__none">なし（起点の申告）</p>}
         </div>
-        <span class="cert__stamp">{e.status}</span>
-      </footer>
-    </div>
-  </section>
+        <div>
+          <p class="cert-lineage__h">派生先</p>
+          {children.length ? (
+            <ul>{children.map((c) => <li><a href={hrefOf(c.no)}><b>{fileNo(c.no)}</b>{c.title}</a></li>)}</ul>
+          ) : <p class="cert-lineage__none">まだない</p>}
+        </div>
+      </div>
+      <Lineage focus={e.no} label={`${fileNo(e.no)}の系譜`} />
+    </section>
 
-  <nav class="cert-nav">
-    {prev ? <a href={href(prev.no)}>← {fileNo(prev.no)}</a> : <span />}
-    <a href="/ledger/">一覧</a>
-    {next ? <a href={href(next.no)}>{fileNo(next.no)} →</a> : <span />}
+    <footer class="cert-seal">
+      <div>
+        <p>上記のとおり申告があったことを証明する。</p>
+        <p class="cert-seal__issuer">税金</p>
+      </div>
+      <span class="cert-seal__stamp">{e.status}</span>
+    </footer>
+  </article>
+
+  <nav class="cert-nav" aria-label="前後の申告">
+    {prev ? (
+      <a class="cert-nav__prev" href={hrefOf(prev.no)} rel="prev">
+        <span>← 前の申告</span><b>{pad(prev.no)}</b><em>{prev.title}</em>
+      </a>
+    ) : <span class="cert-nav__prev is-end"><span>←</span><b>—</b><em>最初の申告</em></span>}
+    <a class="cert-nav__all" href="/ledger/#records">一覧</a>
+    {next ? (
+      <a class="cert-nav__next" href={hrefOf(next.no)} rel="next">
+        <span>次の申告 →</span><b>{pad(next.no)}</b><em>{next.title}</em>
+      </a>
+    ) : <span class="cert-nav__next is-end"><span>→</span><b>—</b><em>最新の申告</em></span>}
   </nav>
 </Ledger>
+
+<script>
+  // ← → で前後の申告へ（入力欄にいるときは無視）
+  const cert = document.querySelector<HTMLElement>(".cert")!;
+  addEventListener("keydown", (ev) => {
+    if (ev.metaKey || ev.ctrlKey || ev.altKey || (ev.target instanceof Element && ev.target.closest("input,textarea,select,[contenteditable]"))) return;
+    const to = ev.key === "ArrowLeft" ? cert.dataset.prev : ev.key === "ArrowRight" ? cert.dataset.next : undefined;
+    if (to) location.href = to;
+  });
+</script>
