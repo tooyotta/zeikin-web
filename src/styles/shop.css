@@ -1,5 +1,21 @@
 /* ---------- 税金ストア（/shop） ---------- */
 
+.shop-test {
+  padding: 10px 24px;
+  background: var(--pink) !important;
+  color: var(--fg);
+  font-size: 13px;
+}
+
+/* 仮の画像の地色（商品ごとに順番に使う） */
+.shop-grid {
+  --swatch-0: var(--lime);
+  --swatch-1: var(--cyan);
+  --swatch-2: var(--pink);
+  --swatch-3: var(--green);
+  --swatch-4: var(--gray-light);
+}
+
 .shop-head {
   padding: 64px 24px 48px;
 }
@@ -67,6 +83,56 @@
   padding: 28px 24px;
   border-right: 1px solid var(--charcoal);
   border-bottom: 1px solid var(--charcoal);
+}
+
+.product__media {
+  position: relative;
+  aspect-ratio: 1;
+  margin: -28px -24px 0;
+  overflow: hidden;
+  background: var(--charcoal);
+}
+
+.product__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* global.css の img { display: block } が hidden 属性に勝ってしまうので明示する */
+.product__img[hidden] {
+  display: none;
+}
+
+.product__placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 20px;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 14px, rgb(0 0 0 / 0.07) 14px 15px),
+    var(--swatch, var(--lime));
+  color: var(--bg);
+}
+
+.product__placeholder-name {
+  font-family: var(--font-sun);
+  font-size: clamp(48px, 7vw, 76px);
+  line-height: 0.9;
+  word-break: break-word;
+}
+
+.product__placeholder-tag {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border: 1px solid var(--bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.product.is-sold-out .product__media {
+  filter: grayscale(1) brightness(0.6);
 }
 
 .product.is-sold-out .product__name,

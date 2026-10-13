@@ -1,9 +1,11 @@
 ---
 import Shop from "../../layouts/Shop.astro";
-const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
+// 本番の API は Cloudflare Workers。ローカルの API で試すときは PUBLIC_SHOP_API=http://localhost:8787 でビルドする
+const api = import.meta.env.PUBLIC_SHOP_API ?? "https://zeikin-shop.tooyotta.workers.dev";
 ---
 
 <Shop title="税金ストア — zeikin.org" description="税金のグッズを、納税する。">
+  <p class="shop-test" role="note">テスト運用中：決済はテストモードです。実際の請求・発送は行われません。</p>
   <section class="shop-head">
     <p class="shop-head__form">様式 ZK-S　税金ストア</p>
     <h1 class="shop-head__title">税金ストア</h1>
@@ -18,6 +20,13 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
 
 <template id="product-card">
   <article class="product">
+    <div class="product__media">
+      <img class="product__img" alt="" loading="lazy" hidden />
+      <div class="product__placeholder" aria-hidden="true">
+        <span class="product__placeholder-name"></span>
+        <span class="product__placeholder-tag">IMAGE 仮</span>
+      </div>
+    </div>
     <div class="product__body">
       <h2 class="product__name"></h2>
       <p class="product__desc"></p>
@@ -54,6 +63,7 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
     id: string;
     name: string;
     description: string;
+    image: string | null;
     variations: Variation[];
   }
 
@@ -62,9 +72,20 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
   const template = document.querySelector<HTMLTemplateElement>("#product-card")!;
   const yen = (n: number | null) => (n === null ? "—" : `¥${n.toLocaleString("ja-JP")}`);
 
-  function render(product: Product) {
+  function render(product: Product, index: number) {
     const card = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
     const $ = <T extends Element>(sel: string) => card.querySelector<T>(sel)!;
+    // 画像は Square に登録したもの。なければ商品名を大きく組んだ仮の画像を出す
+    if (product.image) {
+      const img = $<HTMLImageElement>(".product__img");
+      img.src = product.image;
+      img.alt = product.name;
+      img.hidden = false;
+      $(".product__placeholder").remove();
+    } else {
+      $(".product__placeholder-name").textContent = product.name;
+      card.style.setProperty("--swatch", `var(--swatch-${index % 5})`);
+    }
     $(".product__name").textContent = product.name;
     $(".product__desc").textContent = product.description;
 
@@ -129,7 +150,7 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
         note.textContent = `送料は全国一律 ${yen(shipping.fee)}。決済画面でお支払いください。`;
         note.hidden = false;
       }
-      grid.replaceChildren(...products.map(render));
+      grid.replaceChildren(...products.map((p, i) => render(p, i)));
       if (!products.length) grid.innerHTML = '<p class="shop-status">いま申告できるグッズはありません。</p>';
     } catch {
       grid.innerHTML = '<p class="shop-status">ストアに接続できませんでした。時間をおいて再読み込みしてください。</p>';
