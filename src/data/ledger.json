@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T06:22:30.827Z",
+  "generated_at": "2026-10-13T14:03:58.205Z",
   "entries": [
     {
       "no": 1,
@@ -267,29 +267,6 @@
       "filing": "期限後申告",
       "slug": "tax-tray",
       "body": "TAX の文字を 3D モデリングして 3D プリンタで出力した、白いプラスチックのトレー。ステッカーや小物を受け止める。「なんでも受け止める器」がそのまま物理的な器になった。"
-    },
-    {
-      "no": 13,
-      "title": "言い訳bot",
-      "type": "dev",
-      "stage": "形式化",
-      "date": null,
-      "date_note": "要確認",
-      "place": null,
-      "people": [
-        "豊田",
-        "石川"
-      ],
-      "numbers": null,
-      "related": [
-        1
-      ],
-      "status": "受理",
-      "links": null,
-      "filed": "2026-10-12",
-      "filing": "期限後申告",
-      "slug": "iiwake-bot",
-      "body": "（内容を追記してください）"
     },
     {
       "no": 14,
