@@ -1,0 +1,15 @@
+{
+  "default": { "src": "/media/key-graphic-poster.jpg", "alt": "税金のキーグラフィック", "pos": "center" },
+  "1": { "src": "/ledger/media/001-kobun.webp", "alt": "「課税対象」「納税大好き」などの文字ステッカーが重なり合う", "pos": "center" },
+  "3": { "src": "/ledger/media/003-lego.webp", "alt": "レゴブロックで組まれた文字", "pos": "center 40%" },
+  "4": { "src": "/ledger/media/004-taxhund.webp", "alt": "ノートパソコンに貼られた TAXHUND のステッカー", "pos": "center 55%" },
+  "5": { "src": "/ledger/media/005-zarigani.webp", "alt": "ノートパソコンに貼られたザリガニと why? のステッカー", "pos": "center 35%" },
+  "6": { "src": "/ledger/media/006-why.webp", "alt": "朱色の地に「税」の字が散らばる why? ポスター", "pos": "center 40%" },
+  "7": { "src": "/ledger/media/007-store.webp", "alt": "税金ストアのグッズ一覧（Tシャツ、キャップ、トートバッグ、ステッカー）", "pos": "center" },
+  "9": { "src": "/ledger/media/009-fleamarket.webp", "alt": "フリーマーケットの出店でトートバッグを手渡す", "pos": "center 40%" },
+  "10": { "src": "/ledger/media/010-shopcard.webp", "alt": "ガラス質の tax と TAXHUND が泳ぐショップカードのグラフィック", "pos": "center 30%" },
+  "11": { "src": "/ledger/media/011-conbini.webp", "alt": "コンビニのレジ横に置かれた「ご自由にお取り下さい」の税金ステッカー", "pos": "center 45%" },
+  "12": { "src": "/ledger/media/012-tray.webp", "alt": "TAX の文字をかたどった白い tax トレーとステッカー", "pos": "center 55%" },
+  "14": { "src": "/ledger/media/014-web.webp", "alt": "zeikin.org のトップページ", "pos": "center top" },
+  "15": { "src": "/ledger/media/015-award.webp", "alt": "電源アダプタに貼られた税金ステッカー", "pos": "center" }
+}

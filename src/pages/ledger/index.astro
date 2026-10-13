@@ -2,7 +2,7 @@
 import Ledger from "../../layouts/Ledger.astro";
 import Lineage from "../../components/Lineage.astro";
 import {
-  entries, STAGES, NUMBER_LABELS, fileNo, pad, hrefOf, typeLabel, stageIndex, dateLabel, ordered,
+  entries, STAGES, NUMBER_LABELS, fileNo, pad, hrefOf, typeLabel, stageIndex, dateLabel, ordered, mediaOf, DEFAULT_MEDIA,
 } from "../../lib/ledger";
 
 // 見出しの集計に出すのは活動量を表す数字だけ（ページ数などは個別の証明書に出す）
@@ -17,9 +17,36 @@ for (const e of entries)
   for (const [k, v] of Object.entries(e.numbers ?? {})) if (HEADLINE_NUMBERS.includes(k)) totals[k] = (totals[k] ?? 0) + v;
 const dated = entries.map((e) => e.date).filter((d): d is string => !!d).sort();
 const lastNo = ordered.at(-1)!.no;
+// 背景の写真: 写真のある申告だけ1枚ずつ。写真の無い申告は既定のキーグラフィックに戻る
+const mediaKey = (no: number) => (mediaOf(no).fallback ? "default" : String(no));
+const photos = latest.filter((e) => !mediaOf(e.no).fallback).map((e) => ({ key: String(e.no), ...mediaOf(e.no) }));
 ---
 
-<Ledger title="税金台帳 — zeikin.org" description="税金の活動を、すべて申告として番号で記録する台帳。">
+<Ledger title="税金台帳 — zeikin.org" description="税金の活動を、すべて申告として番号で記録する台帳。" stage>
+  <div class="lg-stage" aria-hidden="true">
+    <img
+      class="lg-stage__img is-on"
+      data-key="default"
+      data-alt={DEFAULT_MEDIA.alt}
+      src={DEFAULT_MEDIA.src}
+      alt=""
+      style={`object-position:${DEFAULT_MEDIA.pos}`}
+    />
+    {photos.map((m) => (
+      <img
+        class="lg-stage__img"
+        data-key={m.key}
+        data-src={m.src}
+        data-alt={m.alt}
+        alt=""
+        decoding="async"
+        style={`object-position:${m.pos}`}
+      />
+    ))}
+    <div class="lg-stage__shade"></div>
+  </div>
+  <p class="lg-stage__cap" aria-live="off"><span>写真</span><em>{DEFAULT_MEDIA.alt}</em></p>
+
   <section class="lg-hero">
     <p class="lg-hero__form">様式 ZK-L　税金台帳　第001号 — {fileNo(lastNo)}</p>
     <h1 class="lg-hero__title">
@@ -78,7 +105,7 @@ const lastNo = ordered.at(-1)!.no;
 
     <ol class="lg-list">
       {latest.map((e) => (
-        <li class="lg-row" data-type={e.type} data-no={e.no}>
+        <li class="lg-row" data-type={e.type} data-no={e.no} data-media={mediaKey(e.no)}>
           <a href={hrefOf(e.no)}>
             <span class="lg-row__no" style={`view-transition-name: no-${pad(e.no)}`}>
               <small>第</small>{pad(e.no)}<small>号</small>
@@ -160,4 +187,74 @@ const lastNo = ordered.at(-1)!.no;
     { rootMargin: "-45% 0px -50% 0px" },
   );
   rows.forEach((r) => (reveal.observe(r), band.observe(r)));
+
+  // ---- 背景の写真 ----
+  // デスクトップは行に触れた写真、触れていないときとスマホは画面中央を通過中の行の写真
+  const imgs = new Map(
+    [...document.querySelectorAll<HTMLImageElement>(".lg-stage__img")].map((im) => [im.dataset.key!, im]),
+  );
+  const cap = document.querySelector<HTMLElement>(".lg-stage__cap em")!;
+  const load = (key: string) => {
+    const im = imgs.get(key);
+    if (im?.dataset.src) {
+      im.src = im.dataset.src;
+      delete im.dataset.src;
+    }
+    return im;
+  };
+  let current = "default";
+  let wanted = "default";
+  const swap = (key: string) => {
+    imgs.get(current)?.classList.remove("is-on");
+    imgs.get(key)!.classList.add("is-on");
+    cap.textContent = imgs.get(key)!.dataset.alt ?? "";
+    cap.parentElement!.classList.toggle("is-on", key !== "default");
+    current = key;
+  };
+  const show = (key: string) => {
+    if (!imgs.has(key)) key = "default";
+    wanted = key;
+    if (key === current) return;
+    const im = load(key)!;
+    // 読み込み前に切り替えると暗転するので、届いてから差し替える
+    if (im.complete && im.naturalWidth) swap(key);
+    else im.addEventListener("load", () => wanted === key && swap(key), { once: true });
+  };
+  // 次に出そうな写真だけ先に読む（表示中の行の前後）
+  const preloadAround = (row: HTMLElement) => {
+    const visible = rows.filter((r) => !r.hidden);
+    const i = visible.indexOf(row);
+    for (const r of [visible[i + 1], visible[i + 2], visible[i - 1]]) if (r) load(r.dataset.media!);
+  };
+
+  let hovering: HTMLElement | null = null;
+  let banded: HTMLElement | null = null;
+  const sync = () => {
+    const row = hovering ?? banded;
+    show(row ? row.dataset.media! : "default");
+    if (row) preloadAround(row);
+  };
+  rows.forEach((r) => {
+    const a = r.querySelector("a")!;
+    a.addEventListener("mouseenter", () => ((hovering = r), sync()));
+    a.addEventListener("focus", () => ((hovering = r), sync()));
+    a.addEventListener("mouseleave", () => ((hovering = null), sync()));
+    a.addEventListener("blur", () => ((hovering = null), sync()));
+  });
+  const inBand = new Set<HTMLElement>();
+  const stageBand = new IntersectionObserver(
+    (list) => {
+      for (const it of list) {
+        const el = it.target as HTMLElement;
+        if (it.isIntersecting) (inBand.add(el), (banded = el));
+        else inBand.delete(el);
+      }
+      if (banded && !inBand.has(banded)) banded = [...inBand][0] ?? null;
+      sync();
+    },
+    { rootMargin: "-45% 0px -50% 0px" },
+  );
+  rows.forEach((r) => stageBand.observe(r));
+  // 最初に出てくる2件だけは、読み込みが落ち着いてから先に取っておく
+  addEventListener("load", () => rows.slice(0, 2).forEach((r) => load(r.dataset.media!)), { once: true });
 </script>

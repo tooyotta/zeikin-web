@@ -2,7 +2,7 @@
 import Ledger from "../../layouts/Ledger.astro";
 import Lineage from "../../components/Lineage.astro";
 import {
-  ordered, STAGES, NUMBER_LABELS, fileNo, byNo, derivedFrom, pad, hrefOf, typeLabel, dateLabel, type Entry,
+  ordered, STAGES, NUMBER_LABELS, fileNo, byNo, derivedFrom, pad, hrefOf, typeLabel, dateLabel, mediaOf, type Entry,
 } from "../../lib/ledger";
 
 export function getStaticPaths() {
@@ -23,6 +23,7 @@ const children = derivedFrom(e.no);
 const paragraphs = e.body.split(/\n\n+/);
 const si = STAGES.indexOf(e.stage);
 const numbers = Object.entries(e.numbers ?? {});
+const photo = mediaOf(e.no);
 const circled = "①②③④⑤⑥⑦⑧⑨";
 const fields: [string, string, string?][] = [
   ["種別", typeLabel(e.type)],
@@ -40,7 +41,16 @@ const fields: [string, string, string?][] = [
   crumb={fileNo(e.no)}
 >
   <article class="cert" data-prev={prev && hrefOf(prev.no)} data-next={next && hrefOf(next.no)}>
-    <header class="cert-hero">
+    <header class:list={["cert-hero", { "is-fallback": photo.fallback }]}>
+      <div class="cert-hero__bg">
+        <img
+          src={photo.src}
+          alt={photo.fallback ? "" : photo.alt}
+          fetchpriority="high"
+          decoding="async"
+          style={`object-position:${photo.pos}`}
+        />
+      </div>
       <p class="cert-hero__form">様式 ZK-L-{pad(e.no)}　納税証明書</p>
       <p class="cert-hero__no" style={`view-transition-name: no-${pad(e.no)}`}>
         <small>第</small>{pad(e.no)}<small>号</small>
@@ -49,6 +59,7 @@ const fields: [string, string, string?][] = [
       <p class="cert-hero__tags">
         <span>#{typeLabel(e.type)}</span><span>{e.stage}</span><span>{e.status}</span>
       </p>
+      {!photo.fallback && <p class="cert-hero__cap"><span>写真</span>{photo.alt}</p>}
     </header>
 
     <section class="cert-form" aria-label="記載事項">

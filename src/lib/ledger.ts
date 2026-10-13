@@ -1,3 +1,4 @@
+import media from "../data/ledger-media.json";
 import data from "../data/ledger.json";
 
 export interface Entry {
@@ -56,3 +57,14 @@ export const stageIndex = (s: string) => STAGES.indexOf(s);
 // 2025-06-15 → 2025.06.15。日付が無いものは「日付不詳」
 export const dateLabel = (d: string | null) => (d ? d.replaceAll("-", ".") : "日付不詳");
 export const ordered = [...entries].sort((a, b) => a.no - b.no);
+
+export interface Media {
+  src: string;
+  alt: string;
+  pos: string;
+}
+const mediaMap = media as Record<string, Media>;
+export const DEFAULT_MEDIA = mediaMap.default;
+// 写真が無い申告は既定のキーグラフィックを使う
+export const mediaOf = (no: number): Media & { fallback: boolean } =>
+  mediaMap[String(no)] ? { ...mediaMap[String(no)], fallback: false } : { ...DEFAULT_MEDIA, fallback: true };

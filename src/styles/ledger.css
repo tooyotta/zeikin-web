@@ -378,32 +378,23 @@
   isolation: isolate;
 }
 
-/* ホバーで左から罫線の内側がライムに塗られる */
-.lg-row > a::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--lime);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.45s var(--ease);
+/* ホバー: 触れた行だけが残り、他の行は退く。番号がライムになる */
+.lg-row > a,
+.lg-row__no {
+  transition:
+    opacity 0.35s var(--ease),
+    color 0.25s;
 }
 
-.lg-row > a:hover::before,
-.lg-row > a:focus-visible::before {
-  transform: scaleX(1);
+@media (hover: hover) {
+  .lg-list:hover .lg-row > a:not(:hover) {
+    opacity: 0.4;
+  }
 }
 
-.lg-row > a:hover,
-.lg-row > a:focus-visible {
-  color: var(--bg);
-}
-
-.lg-row > a:hover *,
-.lg-row > a:focus-visible * {
-  color: var(--bg);
-  border-color: var(--bg);
+.lg-row > a:hover .lg-row__no,
+.lg-row > a:focus-visible .lg-row__no {
+  color: var(--lime);
 }
 
 .lg-row__no {
@@ -683,13 +674,75 @@
 /* ---------- Certificate (詳細) ---------- */
 
 .cert-hero {
+  position: relative;
   display: grid;
+  align-content: end;
   gap: 20px;
+  min-height: min(92svh, 980px);
   padding: clamp(40px, 8vw, 110px) var(--gx) clamp(40px, 6vw, 80px);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.cert-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.cert-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: hero-in 1.6s var(--ease) both;
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+.cert-hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgb(0 0 0 / 0.92) 0%, rgb(0 0 0 / 0.55) 45%, rgb(0 0 0 / 0.35) 100%),
+    linear-gradient(90deg, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0) 70%);
+}
+
+.cert-hero.is-fallback .cert-hero__bg::after {
+  background: linear-gradient(0deg, rgb(0 0 0 / 0.95) 0%, rgb(0 0 0 / 0.7) 60%, rgb(0 0 0 / 0.6) 100%);
+}
+
+.cert-hero > *:not(.cert-hero__bg) {
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.5);
 }
 
 .cert-hero__form {
-  color: var(--mute);
+  align-self: start;
+}
+
+.cert-hero__cap {
+  display: flex;
+  gap: 10px;
+  color: #bdbdbd;
+  font-size: 11px;
+}
+
+.cert-hero__cap span {
+  color: var(--lime);
+  font-family: var(--font-mono);
+}
+
+.cert-hero__tags span {
+  background: rgb(0 0 0 / 0.4);
+}
+
+.cert-hero__form {
+  color: #bdbdbd;
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -1061,6 +1114,104 @@
 
 .cert-nav__all:hover {
   color: var(--lime);
+}
+
+/* ---------- Photo stage (一覧の背景) ---------- */
+
+.lg-stage {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+.lg-stage__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9) brightness(0.9);
+  opacity: 0;
+  transform: scale(1.06);
+  transition:
+    opacity 0.8s var(--ease),
+    transform 6s var(--ease);
+}
+
+.lg-stage__img.is-on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 文字が読めるように: 全体を落とし、左（番号と題名の側）と下をさらに暗く */
+.lg-stage__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.84) 0%, rgb(0 0 0 / 0.6) 55%, rgb(0 0 0 / 0.7) 100%),
+    linear-gradient(0deg, rgb(0 0 0 / 0.7) 0%, rgb(0 0 0 / 0) 45%);
+}
+
+.has-stage {
+  --mute: #bdbdbd;
+  --line: rgb(255 255 255 / 0.3);
+  background: transparent;
+}
+
+.has-stage .lg-row__title,
+.has-stage .lg-row__no,
+.has-stage .lg-hero__title {
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.55);
+}
+
+.has-stage .lg-flow li {
+  background: rgb(0 0 0 / 0.35);
+}
+
+/* 系譜とフッターは写真の舞台から降りて、黒地に戻る */
+.has-stage #lineage,
+.has-stage .lg-foot {
+  background: var(--bg);
+}
+
+.lg-stage__cap {
+  position: fixed;
+  left: var(--gx);
+  bottom: 18px;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  max-width: min(52vw, 520px);
+  padding: 6px 10px;
+  background: rgb(0 0 0 / 0.78);
+  border: 1px solid var(--line);
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.lg-stage__cap.is-on {
+  opacity: 1;
+}
+
+.lg-stage__cap span {
+  flex-shrink: 0;
+  color: var(--lime);
+}
+
+.lg-stage__cap em {
+  overflow: hidden;
+  font-family: var(--font-pixel);
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ---------- Footer ---------- */
