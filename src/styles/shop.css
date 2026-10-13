@@ -28,6 +28,17 @@
   color: var(--gray-light);
 }
 
+.shop-head__note {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--lime);
+}
+
+.shop-head__note[hidden] {
+  display: none;
+}
+
 .shop-head__back {
   margin-top: 32px;
   font-family: var(--font-mono);

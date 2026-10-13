@@ -8,6 +8,7 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
     <p class="shop-head__form">様式 ZK-S　税金ストア</p>
     <h1 class="shop-head__title">税金ストア</h1>
     <p class="shop-head__lead">税金のグッズを、納税する。<br />イベントの店頭と同じ在庫から発送します。</p>
+    <p class="shop-head__note" hidden></p>
   </section>
 
   <section class="shop-grid" data-api={api} aria-live="polite">
@@ -68,7 +69,13 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
     $(".product__desc").textContent = product.description;
 
     const select = $<HTMLSelectElement>("select");
-    for (const v of product.variations) select.add(new Option(v.name, v.id));
+    for (const v of product.variations) {
+      const soldOut = v.stock !== null && v.stock < 1;
+      select.add(new Option(soldOut ? `${v.name}（完納）` : v.name, v.id));
+    }
+    // 最初は在庫のある種類を選んでおく
+    const firstInStock = product.variations.find((v) => v.stock === null || v.stock > 0);
+    if (firstInStock) select.value = firstInStock.id;
     if (product.variations.length < 2) $(".product__field--variation").hidden = true;
 
     const quantity = $<HTMLInputElement>("input[name=quantity]");
@@ -116,7 +123,12 @@ const api = import.meta.env.PUBLIC_SHOP_API ?? "http://localhost:8787";
     try {
       const res = await fetch(`${api}/api/products`);
       if (!res.ok) throw new Error();
-      const { products } = (await res.json()) as { products: Product[] };
+      const { products, shipping } = (await res.json()) as { products: Product[]; shipping?: { fee: number } };
+      const note = document.querySelector<HTMLElement>(".shop-head__note")!;
+      if (shipping) {
+        note.textContent = `送料は全国一律 ${yen(shipping.fee)}。決済画面でお支払いください。`;
+        note.hidden = false;
+      }
       grid.replaceChildren(...products.map(render));
       if (!products.length) grid.innerHTML = '<p class="shop-status">いま申告できるグッズはありません。</p>';
     } catch {
