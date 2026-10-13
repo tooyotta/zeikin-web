@@ -1,5 +1,9 @@
 /* ---------- 税金ストア（/shop） ---------- */
 
+.shop-test[hidden] {
+  display: none;
+}
+
 .shop-test {
   padding: 10px 24px;
   background: var(--pink) !important;
@@ -239,6 +243,31 @@
 .product__error {
   flex-basis: 100%;
   font-size: 13px;
+  color: var(--pink);
+}
+
+/* 特定商取引法に基づく表記・プライバシーポリシー */
+.policy {
+  padding: 0 24px 64px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.policy > * {
+  max-width: 880px;
+}
+
+.policy h2 {
+  margin: 36px 0 8px;
+  font-size: 18px;
+}
+
+.policy ul {
+  margin: 8px 0;
+  padding-left: 1.4em;
+}
+
+.policy .is-todo {
   color: var(--pink);
 }
 
