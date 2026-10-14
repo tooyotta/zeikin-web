@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-13T14:03:58.205Z",
+  "generated_at": "2026-10-14T12:50:01.915Z",
   "entries": [
     {
       "no": 1,
@@ -338,6 +338,27 @@
       "filed": "2026-10-12",
       "slug": "zeikin-ledger",
       "body": "税金の活動をすべて申告として番号で記録する台帳。第001号から第016号は、この日にまとめて遡って申告した（期限後申告）。"
+    },
+    {
+      "no": 18,
+      "title": "TAXHUND SHOOTER",
+      "type": "dev",
+      "stage": "流通",
+      "date": "2026-10-14",
+      "place": "https://taxhund-shooter.zeikin.org",
+      "people": null,
+      "numbers": null,
+      "related": [
+        4
+      ],
+      "status": "受理",
+      "links": [
+        "https://taxhund-shooter.zeikin.org",
+        "https://github.com/zeikinorg/taxhund_shooter"
+      ],
+      "filed": "2026-10-14",
+      "slug": "taxhund-shooter",
+      "body": "TAXHUND が主役の8ビットの弾幕シューティング。税金の弾をよけて撃ち返す。ブラウザでそのまま遊べて、日本語と英語に切り替えられる。スコアのランキングは遊んだ人の端末に残る。\n\nフレンズ（第004号 TAXHUND）が、グッズからゲームの主役になった。"
     }
   ]
 }
