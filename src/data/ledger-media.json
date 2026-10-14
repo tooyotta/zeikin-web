@@ -11,5 +11,6 @@
   "11": { "src": "/ledger/media/011-conbini.webp", "alt": "コンビニのレジ横に置かれた「ご自由にお取り下さい」の税金ステッカー", "pos": "center 45%" },
   "12": { "src": "/ledger/media/012-tray.webp", "alt": "TAX の文字をかたどった白い tax トレーとステッカー", "pos": "center 55%" },
   "14": { "src": "/ledger/media/014-web.webp", "alt": "zeikin.org のトップページ", "pos": "center top" },
-  "15": { "src": "/ledger/media/015-award.webp", "alt": "電源アダプタに貼られた税金ステッカー", "pos": "center" }
+  "15": { "src": "/ledger/media/015-award.webp", "alt": "電源アダプタに貼られた税金ステッカー", "pos": "center" },
+  "18": { "src": "/ledger/media/018-taxhund-shooter.webp", "alt": "TAXHUND SHOOTER のプレイ画面。税金の弾と敵のあいだを TAXHUND が撃ちながら進む", "pos": "center 60%" }
 }
