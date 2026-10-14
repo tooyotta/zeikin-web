@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>税金構文かるた — zeikin.org</title>
+    <meta name="description" content="税金絵文字を並べて、税金構文をつくる。" />
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Fragment+Mono&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="karuta.css" />
+  </head>
+  <body>
+    <div class="page">
+      <!-- zeikin.org のトップと同じティッカー -->
+      <header class="ticker" aria-hidden="true">
+        <div class="ticker__track">
+          <span class="ticker__sun">☼</span><span class="ticker__content"><span>Paying taxes™ is the chief end;</span><span>Labor merely enables its</span></span>
+          <span class="ticker__sun">☼</span><span class="ticker__content"><span>Paying taxes™ is the chief end;</span><span>Labor merely enables its</span></span>
+          <span class="ticker__sun">☼</span><span class="ticker__content"><span>Paying taxes™ is the chief end;</span><span>Labor merely enables its</span></span>
+        </div>
+        <div class="ticker__track">
+          <span class="ticker__sun">☼</span><span class="ticker__content"><span>Paying taxes™ is the chief end;</span><span>Labor merely enables its</span></span>
+          <span class="ticker__sun">☼</span><span class="ticker__content"><span>Paying taxes™ is the chief end;</span><span>Labor merely enables its</span></span>
+          <span class="ticker__sun">☼</span><span class="ticker__content"><span>Paying taxes™ is the chief end;</span><span>Labor merely enables its</span></span>
+        </div>
+      </header>
+
+      <section class="intro">
+        <p class="label"><a href="/">zeikin.org</a> / Karuta</p>
+        <h1 class="intro__headline">税金構文かるた</h1>
+        <p class="intro__lead">税金絵文字を選んで、並べて、ひとつの税金構文をつくる。</p>
+      </section>
+
+      <section class="stage" aria-labelledby="boardTitle">
+        <h2 class="label" id="boardTitle">01 — 台紙</h2>
+        <div class="board" id="board" role="list" aria-label="台紙は空です"></div>
+        <div class="under">
+          <p class="reading" id="reading" aria-live="polite"></p>
+          <div class="tools" role="toolbar" aria-label="操作">
+            <button type="button" class="btn" id="random">ランダムに引く</button>
+            <button type="button" class="btn" id="undo">ひとつ戻す</button>
+            <button type="button" class="btn" id="clear">片付ける</button>
+            <button type="button" class="btn" id="share">URLをコピー</button>
+            <button type="button" class="btn btn--fill" id="png">画像で保存</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="library" aria-labelledby="deckTitle">
+        <h2 class="label" id="deckTitle">02 — 絵文字</h2>
+        <div class="deck-head">
+          <nav class="tabs" id="tabs" aria-label="パッケージ"></nav>
+          <input
+            class="search"
+            id="search"
+            type="search"
+            placeholder="絵文字を探す（例：猫、ありがとう）"
+            aria-label="絵文字を探す"
+          />
+        </div>
+        <p class="hint">
+          台紙へドラッグして好きな位置に差し込む。押すだけでも末尾に置ける。台紙の絵文字はドラッグで並べ替え、台紙の外へ出すと片付く。
+        </p>
+        <div class="deck" id="deck"></div>
+      </section>
+
+      <section class="examples" aria-labelledby="presetTitle">
+        <h2 class="label" id="presetTitle">03 — 手本</h2>
+      </section>
+      <section class="presets" id="presets" aria-label="手本"></section>
+
+      <footer class="footer">
+        <div class="footer__social">
+          <h2 class="footer__heading">Contact us</h2>
+          <ul class="footer__links">
+            <li><a href="https://www.instagram.com/zeikinorg/" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/@zeikinorg" target="_blank" rel="noopener">TikTok</a></li>
+            <li><a href="https://store.line.me/emojishop/product/685a3cbc5891fa264f2d1bc4/ja" target="_blank" rel="noopener">LINE Emoji</a></li>
+          </ul>
+          <p class="footer__note" id="credit"></p>
+          <p class="footer__note">
+            キーボード：絵文字にフォーカスして Enter で置く／台紙の絵文字は Shift+←→ で移動、Delete で片付ける／⌘Z でひとつ戻す
+          </p>
+        </div>
+        <img class="footer__logo" src="images/footer-logo.svg" alt="zeikin.org" />
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="catalog.js"></script>
+    <script src="data.js"></script>
+    <script src="karuta.js"></script>
+  </body>
+</html>

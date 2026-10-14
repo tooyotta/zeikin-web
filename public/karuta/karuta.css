@@ -1,0 +1,688 @@
+/* 税金構文かるた — zeikin.org と同じ作法で組む
+ * 黒地に白、DotGothic16 と Fragment Mono、区切りは白い 1px の線（白いページに 1px の隙間）。
+ * 角丸と影は使わない。配下のページと同じく、操作の色はオレンジ #ef472f だけ。
+ * 絵文字は白い正方形のまま並べる。
+ */
+:root {
+  --bg: #000000;
+  --fg: #ffffff;
+  --orange: #ef472f;
+  --charcoal: #333333;
+  --gray: #555555;
+  --mute: #8a8a8a;
+
+  --deck-w: 76px;
+  --board-w: 76px;
+
+  --font-pixel: "DotGothic16", "Hiragino Sans", sans-serif;
+  --font-mono: "Fragment Mono", ui-monospace, monospace;
+  --font-sun: "VT323", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--fg);
+  color: var(--fg);
+  font-family: var(--font-pixel);
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+}
+
+/* 白いページに 1px の隙間を空けて、白い区切り線を描く（トップと同じ） */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-height: 100vh;
+}
+.page > * {
+  background: var(--bg);
+}
+
+/* ---------- ティッカー（トップと同じ値） ---------- */
+
+.ticker {
+  display: flex;
+  overflow: hidden;
+  padding-block: 10px;
+  white-space: nowrap;
+}
+.ticker__track {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  padding-right: 50px;
+  animation: ticker-scroll 67.4446875s linear infinite;
+}
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+.ticker__sun {
+  flex-shrink: 0;
+  font-family: var(--font-sun);
+  font-size: 14px;
+  line-height: 0.9;
+}
+.ticker__content {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  font-size: 16px;
+  line-height: 0.9;
+  letter-spacing: 0.16px;
+}
+
+/* ---------- 見出し ---------- */
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.28px;
+  color: var(--mute);
+}
+.label a {
+  color: var(--fg);
+  text-decoration: none;
+}
+.label a:hover {
+  text-decoration: underline;
+}
+
+.intro {
+  padding: 80px 16px 120px;
+}
+.intro .label {
+  margin-bottom: 18px;
+}
+.intro__headline {
+  font-size: 64px;
+  line-height: 1.3;
+  letter-spacing: 0.64px;
+}
+.intro__lead {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.16px;
+}
+
+/* ---------- 台紙 ---------- */
+
+.stage,
+.library,
+.examples {
+  padding: 30px 16px 40px;
+}
+.stage > .label,
+.library > .label {
+  margin-bottom: 20px;
+}
+.examples {
+  padding-bottom: 30px;
+}
+
+.board {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 12px 4px;
+  min-height: 220px;
+  padding: 32px;
+  border: 1px solid var(--gray);
+  transition: border-color 0.15s;
+}
+.board.is-over {
+  border-color: var(--orange);
+}
+
+.board__empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  color: var(--gray);
+  pointer-events: none;
+}
+
+.under {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 16px;
+}
+
+.reading {
+  flex: 1 1 100%;
+  min-height: 1.5em;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--mute);
+}
+.reading b {
+  margin-left: 12px;
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  font-size: 20px;
+  color: var(--fg);
+}
+.reading small {
+  margin-left: 12px;
+  font-size: 12px;
+}
+
+/* ---------- 絵文字（白い正方形） ---------- */
+
+.fuda {
+  --w: var(--deck-w);
+  position: relative;
+  flex: none;
+  display: block;
+  width: var(--w);
+  height: var(--w);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y; /* 横の動きは絵文字を持つ操作に使う */
+  transition: transform 0.15s;
+}
+.fuda__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.fuda:hover {
+  transform: translateY(-2px);
+}
+.fuda:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.board .fuda {
+  --w: var(--board-w);
+}
+.board .fuda.is-selected {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+.board .fuda.is-hidden {
+  display: none;
+}
+.board .fuda.is-placed {
+  animation: place 0.22s steps(4) both;
+}
+@keyframes place {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 選んだ絵文字の小さな操作 */
+.ops {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 5;
+  display: flex;
+  gap: 1px;
+  background: var(--bg);
+  border: 1px solid var(--orange);
+  transform: translateX(-50%);
+}
+.ops button {
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  font: 400 14px/1 var(--font-mono);
+  color: var(--orange);
+  background: var(--bg);
+  border: 0;
+  cursor: pointer;
+}
+.ops button:hover,
+.ops button:focus-visible {
+  color: var(--bg);
+  background: var(--orange);
+  outline: none;
+}
+.ops button:disabled {
+  color: var(--gray);
+  background: var(--bg);
+  cursor: default;
+}
+
+.slot {
+  flex: none;
+  width: var(--board-w);
+  height: var(--board-w);
+  border: 1px dashed var(--orange);
+}
+
+.ghost {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  margin: 0;
+  pointer-events: none;
+  transition: none;
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+.ghost.is-trash {
+  opacity: 0.45;
+  outline-color: var(--gray);
+}
+.ghost.is-trash::after {
+  content: "片付ける";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  margin-top: 10px;
+  padding: 4px 8px;
+  font: 400 12px/1 var(--font-pixel);
+  white-space: nowrap;
+  color: var(--bg);
+  background: var(--fg);
+  transform: translateX(-50%);
+}
+
+body.is-dragging,
+body.is-dragging * {
+  cursor: grabbing !important;
+}
+
+/* ---------- ボタン（配下のページと同じ枠線のオレンジ） ---------- */
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 16px;
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  line-height: 1;
+  color: var(--orange);
+  background: transparent;
+  border: 1px solid var(--orange);
+  border-radius: 0;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled) {
+  color: var(--bg);
+  background: var(--orange);
+}
+.btn:focus-visible {
+  outline: 1px solid var(--fg);
+  outline-offset: 3px;
+}
+.btn:disabled {
+  color: var(--gray);
+  border-color: var(--gray);
+  cursor: default;
+}
+.btn--fill {
+  color: var(--bg);
+  background: var(--orange);
+}
+.btn--fill:hover:not(:disabled) {
+  color: var(--orange);
+  background: transparent;
+}
+.btn--fill:disabled {
+  color: var(--bg);
+  background: var(--gray);
+}
+
+/* ---------- 絵文字の一覧 ---------- */
+
+.deck-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-bottom: 14px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tab {
+  padding: 8px 12px;
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  line-height: 1;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--gray);
+  cursor: pointer;
+}
+.tab small {
+  margin-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+.tab:hover {
+  border-color: var(--fg);
+}
+.tab[aria-pressed="true"] {
+  color: var(--bg);
+  background: var(--fg);
+  border-color: var(--fg);
+}
+.tab[aria-pressed="true"] small {
+  color: var(--gray);
+}
+.tab:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.search {
+  width: 280px;
+  padding: 9px 12px;
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--gray);
+  border-radius: 0;
+  outline: none;
+  -webkit-appearance: none;
+}
+.search::placeholder {
+  color: var(--mute);
+}
+.search:focus {
+  border-color: var(--orange);
+}
+
+.hint {
+  margin-bottom: 36px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--mute);
+}
+
+.pack + .pack {
+  margin-top: 56px;
+}
+.pack__h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  margin-bottom: 6px;
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: 0.24px;
+}
+.pack__status {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: -0.24px;
+  color: var(--mute);
+}
+.pack__status a {
+  color: var(--orange);
+  text-underline-offset: 3px;
+}
+.pack__desc {
+  margin-bottom: 22px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--mute);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--deck-w) + 24px), 1fr));
+  gap: 24px 8px;
+}
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.cell figcaption {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: calc(var(--deck-w) + 22px);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--mute);
+}
+
+.deck__empty {
+  margin: 24px 0;
+  font-size: 14px;
+  color: var(--mute);
+}
+
+/* ---------- 手本（トップの商品グリッドと同じ 1px の白線） ---------- */
+
+/* 最後の行のマスは横に伸びて埋まる（トップの .grid__item と同じ考え方） */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  background: var(--fg) !important;
+}
+
+.preset {
+  flex: 1 0 min(380px, 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  min-height: 240px;
+  padding: 21px 13px 16px;
+  font: inherit;
+  color: var(--fg);
+  text-align: left;
+  background: var(--bg);
+  border: 0;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.preset:hover {
+  background: var(--charcoal);
+}
+.preset:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: -2px;
+}
+
+.preset__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.preset__row .fuda {
+  --w: 60px;
+  cursor: pointer;
+}
+.preset__row .fuda:hover {
+  transform: none;
+}
+
+.preset__name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.28px;
+}
+
+/* ---------- フッター（トップと同じ） ---------- */
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 127px;
+  padding: 30px 15px 15px;
+}
+.footer__social {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.footer__heading {
+  font-size: 28px;
+  line-height: 0.9;
+  letter-spacing: -0.84px;
+}
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 24px;
+  line-height: 0.9;
+  letter-spacing: -0.72px;
+}
+.footer__links a {
+  text-decoration: none;
+}
+.footer__links a:hover {
+  text-decoration: underline;
+}
+.footer__note {
+  max-width: 760px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--mute);
+}
+.footer__note + .footer__note {
+  margin-top: -22px;
+}
+.footer__note a {
+  color: var(--fg);
+}
+.footer__logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- 知らせ ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 60;
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--bg);
+  background: var(--orange);
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+}
+.toast.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- スマホ（トップの 375 の枠に合わせる） ---------- */
+
+@media (max-width: 640px) {
+  :root {
+    --deck-w: 64px;
+    --board-w: 56px;
+  }
+  .intro {
+    padding: 56px 16px 80px;
+  }
+  .intro__headline {
+    font-size: 44px;
+    letter-spacing: 0.44px;
+  }
+  .board {
+    min-height: 180px;
+    padding: 16px;
+    gap: 10px 3px;
+  }
+  .search {
+    width: 100%;
+  }
+  .grid {
+    gap: 20px 4px;
+  }
+  .preset {
+    min-height: 170px;
+    gap: 24px;
+  }
+  .preset__row .fuda {
+    --w: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track {
+    animation: none;
+  }
+  .board .fuda.is-placed {
+    animation: none;
+  }
+}
