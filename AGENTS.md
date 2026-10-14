@@ -1,4 +1,4 @@
-# AGENTS.md — zeikin.org（tooyotta/zeikin-web）
+# AGENTS.md — zeikin.org（zeikinorg/zeikin-web）
 
 税金の公式サイト。Astro 5 の静的サイトで、**main に push すると GitHub Pages に自動でデプロイ**される。
 
